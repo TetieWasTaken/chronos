@@ -6,6 +6,7 @@ import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 import { ScheduleItem } from "@/types";
 
+// The different types that a schedule item can have
 const scheduleTypes = [
   { value: "deadline", label: "Deadline" },
   { value: "meeting", label: "Meeting" },
@@ -13,6 +14,7 @@ const scheduleTypes = [
   { value: "event", label: "Event" },
 ];
 
+// Temporary data for the initial weekly schedule
 const initialWeeklySchedule: Record<string, ScheduleItem[]> = {
   Monday: [
     { title: "Math Assignment", type: "deadline", timestamp: new Date("2022-01-10T23:59:00").getTime() },
@@ -60,6 +62,7 @@ export default function CalendarPage() {
     description: "",
   });
 
+  // todo: format the timestamp in the correct locale
   const formatTimestamp = (timestamp: number) => {
     return new Intl.DateTimeFormat("en-US", {
       hour: "numeric",
@@ -68,11 +71,13 @@ export default function CalendarPage() {
     }).format(new Date(timestamp));
   };
 
+  // Calculate the height of the schedule item based on the duration
   const calculateHeight = (start: number, end?: number) => {
     const durationMinutes = end ? (end - start) / (1000 * 60) : 30;
     return durationMinutes * 0.75;
   };
 
+  //  Add a new schedule item to the weekly schedule
   const handleAddScheduleItem = () => {
     const day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(new Date(newItem.timestamp));
     
@@ -97,6 +102,7 @@ export default function CalendarPage() {
         </button>
       </div>
 
+      { /* Modal for adding a new schedule item */ }
       {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-gray-800 rounded-md p-5 shadow-lg w-96">
