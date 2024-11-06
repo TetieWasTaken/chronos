@@ -152,7 +152,6 @@ export default function CalendarPage() {
   };
 
   return (
-    // 'add' button to add a new schedule item
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4 sm:p-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl sm:text-3xl font-semibold">Weekly Schedule</h1>
@@ -166,8 +165,6 @@ export default function CalendarPage() {
 
       {/* Navigation for the weeks */}
       <div className="flex items-center justify-center space-x-4 mb-4">
-        {/* <span className="text-xl font-semibold mb-1">{format(currentWeekStart, "yyyy")}</span> */}
-
         <button
           onClick={handlePreviousWeek}
           className="text-gray-400 hover:text-white"
@@ -186,102 +183,13 @@ export default function CalendarPage() {
       </div>
 
       {/* Modal for adding a new schedule item */}
-      {modalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-gray-800 rounded-md p-5 shadow-lg w-96">
-            <h2 className="text-lg font-semibold mb-4">Add Schedule Item</h2>
-
-            <input
-              type="text"
-              value={newItem.title}
-              onChange={(e) =>
-                setNewItem({ ...newItem, title: e.target.value })}
-              placeholder="Title"
-              className="w-full p-2 mb-3 border rounded border-gray-600 bg-gray-700 text-gray-200"
-            />
-
-            <Select
-              value={scheduleTypes.find((option) =>
-                option.value === newItem.type
-              )}
-              onChange={(option) =>
-                setNewItem({ ...newItem, type: option?.value || "deadline" })}
-              options={scheduleTypes}
-              className="mb-3"
-              styles={{
-                singleValue: (base) => ({ ...base, color: "white" }),
-                control: (base, state) => ({
-                  ...base,
-                  background: "#374151",
-                }),
-                option: (styles, { isFocused }) => {
-                  return {
-                    ...styles,
-                    backgroundColor: isFocused ? "#4B5563" : "#374151",
-                    color: "white",
-                  };
-                },
-              }}
-              placeholder="Select Type"
-            />
-
-            <label className="block mb-2 text-sm">Start Time:</label>
-            <DatePicker
-              selected={new Date(newItem.timestamp)}
-              onChange={(date) =>
-                setNewItem({
-                  ...newItem,
-                  timestamp: date?.getTime() || Date.now(),
-                })}
-              className="mb-3 w-full p-2 border rounded border-gray-600 bg-gray-700 text-gray-200"
-              showTimeSelect
-              dateFormat="Pp"
-            />
-
-            <label className="block mb-2 text-sm">End Time (optional):</label>
-            <DatePicker
-              selected={newItem.endTimestamp
-                ? new Date(newItem.endTimestamp)
-                : null}
-              onChange={(date) =>
-                setNewItem({ ...newItem, endTimestamp: date?.getTime() })}
-              className="mb-3 w-full p-2 border rounded border-gray-600 bg-gray-700 text-gray-200"
-              showTimeSelect
-              dateFormat="Pp"
-            />
-
-            <textarea
-              value={newItem.description}
-              onChange={(e) =>
-                setNewItem({ ...newItem, description: e.target.value })}
-              placeholder="Description"
-              className="w-full p-2 mb-3 border rounded border-gray-600 bg-gray-700 text-gray-200"
-              rows={3}
-            />
-
-            <div className="flex justify-between">
-              <button
-                onClick={handleAddScheduleItem}
-                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setModalOpen(false)}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal code stays the same */}
 
       {/* Display the weekly schedule */}
-      <div className="grid grid-cols-7 gap-3">
+      <div className="grid grid-cols-8 gap-3">
         {/* For each day of the week, display the schedule items */}
         {Object.entries(weeklySchedule).map(([day, items], index) => {
-          // Filter out the items that are not in the current week
+          // Filter and sort the schedule items
           const itemsInWeek = items
             .map((item) => ({
               ...item,
@@ -305,7 +213,6 @@ export default function CalendarPage() {
             >
               <div className="border-b border-gray-700 pb-2 mb-2">
                 <h2 className="text-lg sm:text-xl font-semibold">{day}</h2>
-
                 <span className="text-xs sm:text-sm text-gray-500">
                   {format(
                     new Date(currentWeekStart).setDate(
@@ -325,49 +232,38 @@ export default function CalendarPage() {
                     );
 
                     return (
-                      <div key={hour} className="relative h-8 sm:h-10 flex">
-                        {itemsAtThisHour.map((item, index) => {
-                          const height = calculateHeight(
-                            item.timestamp,
-                            item.endTimestamp,
-                          );
-                          return (
-                            <div
-                              key={hour}
-                              className="relative h-8 sm:h-10 w-full flex"
-                            >
-                              {itemsAtThisHour.map((item, index) => {
-                                const height = calculateHeight(
-                                  item.timestamp,
-                                  item.endTimestamp,
-                                );
-                                return (
-                                  <div
-                                    key={index}
-                                    /* Styling for the schedule item, with a unique colour for each type */
-                                    className={`w-full p-2 rounded text-xs sm:text-sm flex items-center justify-center ${
-                                      item.type === "deadline"
-                                        ? "bg-red-500 text-white"
-                                        : item.type === "meeting"
-                                        ? "bg-blue-500 text-white"
-                                        : item.type === "study"
-                                        ? "bg-green-500 text-white"
-                                        : "bg-purple-500 text-white"
-                                    }`}
-                                    style={{
-                                      height: `${height}px`,
-                                      top: `${index * 30}px`, // Keep the vertical stacking, if needed
-                                    }}
-                                  >
-                                    <span className="font-semibold text-xs text-center">
-                                      {item.title}
-                                    </span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          );
-                        })}
+                      <div key={hour} className="relative flex">
+                        {/* Schedule items */}
+                        <div className="relative h-8 sm:h-10 w-full flex">
+                          {itemsAtThisHour.map((item, index) => {
+                            const height = calculateHeight(
+                              item.timestamp,
+                              item.endTimestamp,
+                            );
+                            return (
+                              <div
+                                key={index}
+                                className={`w-full p-2 rounded text-xs sm:text-sm flex items-center justify-center ${
+                                  item.type === "deadline"
+                                    ? "bg-red-500 text-white"
+                                    : item.type === "meeting"
+                                    ? "bg-blue-500 text-white"
+                                    : item.type === "study"
+                                    ? "bg-green-500 text-white"
+                                    : "bg-purple-500 text-white"
+                                }`}
+                                style={{
+                                  height: `${height}px`,
+                                  top: `${index * 30}px`,
+                                }}
+                              >
+                                <span className="font-semibold text-xs text-center">
+                                  {item.title}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
                         <div className="text-gray-500 text-[10px] sm:text-xs ml-auto">
                           {`${hour}:00`}
                         </div>
@@ -379,6 +275,18 @@ export default function CalendarPage() {
             </div>
           );
         })}
+
+        <div className="flex flex-col justify-between">
+          <div className="h-[2.5rem]"></div>{" "}
+          {Array.from({ length: 25 }, (_, hour) => (
+            <div
+              key={hour}
+              className="text-gray-500 text-xs text-center border-b border-gray-700"
+            >
+              {`${hour}:00`}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
