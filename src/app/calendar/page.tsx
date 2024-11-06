@@ -1,5 +1,6 @@
 "use client";
 
+// Imports
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
@@ -52,7 +53,9 @@ const initialWeeklySchedule: Record<string, ScheduleItem[]> = {
   Sunday: [{ title: "Final Exam", type: "deadline", timestamp: new Date("2022-01-16T09:00:00").getTime() }],
 };
 
+// Page
 export default function CalendarPage() {
+  // States
   const [weeklySchedule, setWeeklySchedule] = useState(initialWeeklySchedule);
   const [modalOpen, setModalOpen] = useState(false);
   const [newItem, setNewItem] = useState<ScheduleItem>({
@@ -72,6 +75,8 @@ export default function CalendarPage() {
     }).format(new Date(timestamp));
   };
 
+
+  // Week handling
   const today = new Date();
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(today, { weekStartsOn: 1 }));
 
@@ -106,6 +111,7 @@ export default function CalendarPage() {
   };
 
   return (
+    // 'add' button to add a new schedule item
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4 sm:p-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl sm:text-3xl font-semibold">Weekly Schedule</h1>
@@ -117,6 +123,7 @@ export default function CalendarPage() {
         </button>
       </div>
 
+      { /* Navigation for the weeks */ }
       <div className="flex items-center justify-center space-x-4 mb-4">
         <button onClick={handlePreviousWeek} className="text-gray-400 hover:text-white">
           ◀
@@ -209,7 +216,10 @@ export default function CalendarPage() {
         </div>
       )}
 
+      { /* Display the weekly schedule */ }
       <div className="grid grid-cols-7 gap-3">
+
+        { /* For each day of the week, display the schedule items */ }
         {Object.entries(weeklySchedule).map(([day, items]) => {
           const sortedItems = [...items].sort((a, b) => a.timestamp - b.timestamp);
 
@@ -218,6 +228,8 @@ export default function CalendarPage() {
               <h2 className="text-lg sm:text-xl font-semibold border-b border-gray-700 pb-1 mb-2">{day}</h2>
               <div className="relative">
                 <div className="grid grid-rows-24 gap-1">
+
+                  { /* For each hour of the day, display the schedule items */ }
                   {Array.from({ length: 24 }, (_, hour) => {
                     const itemsAtThisHour = sortedItems.filter(
                       (item) => new Date(item.timestamp).getHours() === hour
@@ -230,6 +242,7 @@ export default function CalendarPage() {
                           return (
                             <div
                               key={index}
+                              /* Styling for the schedule item, with a unique colour for each type */
                               className={`absolute left-0 right-0 mt-1 p-2 rounded text-xs sm:text-sm ${
                                 item.type === "deadline"
                                   ? "bg-red-500 text-white"
