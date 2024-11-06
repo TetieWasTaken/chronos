@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 import { ScheduleItem } from "@/types";
+import { addDays, startOfWeek, endOfWeek, format } from "date-fns";
 
 // The different types that a schedule item can have
 const scheduleTypes = [
@@ -71,6 +72,20 @@ export default function CalendarPage() {
     }).format(new Date(timestamp));
   };
 
+  const today = new Date();
+  const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(today, { weekStartsOn: 1 }));
+
+  const handlePreviousWeek = () => {
+    setCurrentWeekStart(addDays(currentWeekStart, -7));
+  };
+
+  const handleNextWeek = () => {
+    setCurrentWeekStart(addDays(currentWeekStart, 7));
+  };
+
+  const currentWeekEnd = endOfWeek(currentWeekStart, { weekStartsOn: 1 });
+  const formatDate = (date: Date) => format(date, "MMM d");
+
   // Calculate the height of the schedule item based on the duration
   const calculateHeight = (start: number, end?: number) => {
     const durationMinutes = end ? (end - start) / (1000 * 60) : 30;
@@ -99,6 +114,18 @@ export default function CalendarPage() {
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
         >
           Add
+        </button>
+      </div>
+
+      <div className="flex items-center justify-center space-x-4 mb-4">
+        <button onClick={handlePreviousWeek} className="text-gray-400 hover:text-white">
+          ◀
+        </button>
+        <span className="text-lg font-semibold">
+          {`${formatDate(currentWeekStart)} - ${formatDate(currentWeekEnd)}`}
+        </span>
+        <button onClick={handleNextWeek} className="text-gray-400 hover:text-white">
+          ▶
         </button>
       </div>
 
