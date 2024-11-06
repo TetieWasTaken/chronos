@@ -350,24 +350,30 @@ export default function CalendarPage() {
                               }}
                             >
                               <div className="flex justify-between">
-                                <span className="font-semibold">
+                                <span className="font-semibold text-xs">
                                   {item.title}
                                 </span>
-                                <span className="text-[10px] sm:text-xs">
+                                {
+                                  /* <span className="text-[10px] sm:text-xs">
                                   {formatTimestamp(item.timestamp)}{" "}
                                   {item.endTimestamp
                                     ? `- ${formatTimestamp(item.endTimestamp)}`
                                     : ""}
-                                </span>
+                                </span> */
+                                }
                               </div>
-                              {item.description && (
+                              {
+                                /* item.description && (
                                 <p className="text-[10px] sm:text-xs mt-1">
                                   {item.description}
                                 </p>
-                              )}
-                              <span className="text-[10px] sm:text-xs font-bold uppercase">
+                              ) */
+                              }
+                              {
+                                /*<span className="text-[10px] sm:text-xs font-bold uppercase">
                                 {item.type}
-                              </span>
+                              </span> */
+                              }
                             </div>
                           );
                         })}
