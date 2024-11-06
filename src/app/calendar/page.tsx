@@ -19,38 +19,38 @@ const scheduleTypes = [
 // Temporary data for the initial weekly schedule
 const initialWeeklySchedule: Record<string, ScheduleItem[]> = {
   Monday: [
-    { title: "Math Assignment", type: "deadline", timestamp: new Date("2022-01-10T23:59:00").getTime() },
+    { title: "Math Assignment", type: "deadline", timestamp: new Date("2024-11-04T23:59:00").getTime() },
     {
       title: "Team Project Meeting",
       type: "meeting",
-      timestamp: new Date("2022-01-10T15:00:00").getTime(),
-      endTimestamp: new Date("2022-01-10T16:00:00").getTime(),
+      timestamp: new Date("2024-11-04T15:00:00").getTime(),
+      endTimestamp: new Date("2024-11-04TT16:00:00").getTime(),
       description: "Discuss project progress",
     },
   ],
   Tuesday: [
-    { title: "Study Group", type: "study", timestamp: new Date("2022-01-11T14:00:00").getTime() },
+    { title: "Study Group", type: "study", timestamp: new Date("2024-11-05T14:00:00").getTime() },
   ],
   Wednesday: [
     {
       title: "Webinar",
       type: "event",
-      timestamp: new Date("2022-01-12T10:00:00").getTime(),
-      endTimestamp: new Date("2022-01-12T12:00:00").getTime(),
+      timestamp: new Date("2024-11-06T10:00:00").getTime(),
+      endTimestamp: new Date("2024-11-06T12:00:00").getTime(),
       description: "Web development trends",
     },
   ],
   Thursday: [
-    { title: "Physics Lab Report", type: "deadline", timestamp: new Date("2022-01-13T23:59:00").getTime() },
-    { title: "Study Group", type: "study", timestamp: new Date("2022-01-13T14:00:00").getTime() },
-    { title: "Club Meeting", type: "meeting", timestamp: new Date("2022-01-13T18:00:00").getTime() },
-    { title: "Club Event", type: "event", timestamp: new Date("2022-01-13T20:00:00").getTime() },
+    { title: "Physics Lab Report", type: "deadline", timestamp: new Date("2024-11-07T23:59:00").getTime() },
+    { title: "Study Group", type: "study", timestamp: new Date("2024-11-07T14:00:00").getTime() },
+    { title: "Club Meeting", type: "meeting", timestamp: new Date("2024-11-07T18:00:00").getTime() },
+    { title: "Club Event", type: "event", timestamp: new Date("2024-11-07T20:00:00").getTime() },
   ],
   Friday: [
-    { title: "Study Group", type: "study", timestamp: new Date("2022-01-14T14:00:00").getTime() },
+    { title: "Study Group", type: "study", timestamp: new Date("2024-11-08T14:00:00").getTime() },
   ],
   Saturday: [],
-  Sunday: [{ title: "Final Exam", type: "deadline", timestamp: new Date("2022-01-16T09:00:00").getTime() }],
+  Sunday: [{ title: "Final Exam", type: "deadline", timestamp: new Date("2024-11-10T09:00:00").getTime() }],
 };
 
 // Page
@@ -223,7 +223,17 @@ export default function CalendarPage() {
 
         { /* For each day of the week, display the schedule items */ }
         {Object.entries(weeklySchedule).map(([day, items]) => {
-          const sortedItems = [...items].sort((a, b) => a.timestamp - b.timestamp);
+          // Filter out the items that are not in the current week
+            const itemsInWeek = items
+            .map((item) => ({
+              ...item,
+              endTimestamp: item.endTimestamp || item.timestamp + 30 * 60 * 1000,
+            }))
+            .filter(
+              (item) => new Date(item.timestamp) >= currentWeekStart && new Date(item.timestamp) <= currentWeekEnd
+            );
+
+          const sortedItems = itemsInWeek.sort((a, b) => a.timestamp - b.timestamp);
 
           return (
             <div key={day} className="bg-gray-800 rounded-md p-3 shadow-md z-10">
