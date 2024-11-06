@@ -125,6 +125,8 @@ export default function CalendarPage() {
 
       { /* Navigation for the weeks */ }
       <div className="flex items-center justify-center space-x-4 mb-4">
+        { /* <span className="text-xl font-semibold mb-1">{format(currentWeekStart, "yyyy")}</span> */ }
+
         <button onClick={handlePreviousWeek} className="text-gray-400 hover:text-white">
           ◀
         </button>
