@@ -333,47 +333,38 @@ export default function CalendarPage() {
                           );
                           return (
                             <div
-                              key={index}
-                              /* Styling for the schedule item, with a unique colour for each type */
-                              className={`absolute left-0 right-0 mt-1 p-2 rounded text-xs sm:text-sm ${
-                                item.type === "deadline"
-                                  ? "bg-red-500 text-white"
-                                  : item.type === "meeting"
-                                  ? "bg-blue-500 text-white"
-                                  : item.type === "study"
-                                  ? "bg-green-500 text-white"
-                                  : "bg-purple-500 text-white"
-                              }`}
-                              style={{
-                                height: `${height}px`,
-                                top: `${index * 30}px`,
-                              }}
+                              key={hour}
+                              className="relative h-8 sm:h-10 w-full flex"
                             >
-                              <div className="flex justify-between">
-                                <span className="font-semibold text-xs">
-                                  {item.title}
-                                </span>
-                                {
-                                  /* <span className="text-[10px] sm:text-xs">
-                                  {formatTimestamp(item.timestamp)}{" "}
-                                  {item.endTimestamp
-                                    ? `- ${formatTimestamp(item.endTimestamp)}`
-                                    : ""}
-                                </span> */
-                                }
-                              </div>
-                              {
-                                /* item.description && (
-                                <p className="text-[10px] sm:text-xs mt-1">
-                                  {item.description}
-                                </p>
-                              ) */
-                              }
-                              {
-                                /*<span className="text-[10px] sm:text-xs font-bold uppercase">
-                                {item.type}
-                              </span> */
-                              }
+                              {itemsAtThisHour.map((item, index) => {
+                                const height = calculateHeight(
+                                  item.timestamp,
+                                  item.endTimestamp,
+                                );
+                                return (
+                                  <div
+                                    key={index}
+                                    /* Styling for the schedule item, with a unique colour for each type */
+                                    className={`w-full p-2 rounded text-xs sm:text-sm flex items-center justify-center ${
+                                      item.type === "deadline"
+                                        ? "bg-red-500 text-white"
+                                        : item.type === "meeting"
+                                        ? "bg-blue-500 text-white"
+                                        : item.type === "study"
+                                        ? "bg-green-500 text-white"
+                                        : "bg-purple-500 text-white"
+                                    }`}
+                                    style={{
+                                      height: `${height}px`,
+                                      top: `${index * 30}px`, // Keep the vertical stacking, if needed
+                                    }}
+                                  >
+                                    <span className="font-semibold text-xs text-center">
+                                      {item.title}
+                                    </span>
+                                  </div>
+                                );
+                              })}
                             </div>
                           );
                         })}
