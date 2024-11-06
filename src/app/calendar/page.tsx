@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 import { ScheduleItem } from "@/types";
-import { addDays, startOfWeek, endOfWeek, format } from "date-fns";
+import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
 
 // The different types that a schedule item can have
 const scheduleTypes = [
@@ -19,7 +19,11 @@ const scheduleTypes = [
 // Temporary data for the initial weekly schedule
 const initialWeeklySchedule: Record<string, ScheduleItem[]> = {
   Monday: [
-    { title: "Math Assignment", type: "deadline", timestamp: new Date("2024-11-04T23:59:00").getTime() },
+    {
+      title: "Math Assignment",
+      type: "deadline",
+      timestamp: new Date("2024-11-04T23:59:00").getTime(),
+    },
     {
       title: "Team Project Meeting",
       type: "meeting",
@@ -29,7 +33,11 @@ const initialWeeklySchedule: Record<string, ScheduleItem[]> = {
     },
   ],
   Tuesday: [
-    { title: "Study Group", type: "study", timestamp: new Date("2024-11-05T14:00:00").getTime() },
+    {
+      title: "Study Group",
+      type: "study",
+      timestamp: new Date("2024-11-05T14:00:00").getTime(),
+    },
   ],
   Wednesday: [
     {
@@ -41,16 +49,40 @@ const initialWeeklySchedule: Record<string, ScheduleItem[]> = {
     },
   ],
   Thursday: [
-    { title: "Physics Lab Report", type: "deadline", timestamp: new Date("2024-11-07T23:59:00").getTime() },
-    { title: "Study Group", type: "study", timestamp: new Date("2024-11-07T14:00:00").getTime() },
-    { title: "Club Meeting", type: "meeting", timestamp: new Date("2024-11-07T18:00:00").getTime() },
-    { title: "Club Event", type: "event", timestamp: new Date("2024-11-07T20:00:00").getTime() },
+    {
+      title: "Physics Lab Report",
+      type: "deadline",
+      timestamp: new Date("2024-11-07T23:59:00").getTime(),
+    },
+    {
+      title: "Study Group",
+      type: "study",
+      timestamp: new Date("2024-11-07T14:00:00").getTime(),
+    },
+    {
+      title: "Club Meeting",
+      type: "meeting",
+      timestamp: new Date("2024-11-07T18:00:00").getTime(),
+    },
+    {
+      title: "Club Event",
+      type: "event",
+      timestamp: new Date("2024-11-07T20:00:00").getTime(),
+    },
   ],
   Friday: [
-    { title: "Study Group", type: "study", timestamp: new Date("2024-11-08T14:00:00").getTime() },
+    {
+      title: "Study Group",
+      type: "study",
+      timestamp: new Date("2024-11-08T14:00:00").getTime(),
+    },
   ],
   Saturday: [],
-  Sunday: [{ title: "Final Exam", type: "deadline", timestamp: new Date("2024-11-10T09:00:00").getTime() }],
+  Sunday: [{
+    title: "Final Exam",
+    type: "deadline",
+    timestamp: new Date("2024-11-10T09:00:00").getTime(),
+  }],
 };
 
 // Page
@@ -75,10 +107,11 @@ export default function CalendarPage() {
     }).format(new Date(timestamp));
   };
 
-
   // Week handling
   const today = new Date();
-  const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(today, { weekStartsOn: 1 }));
+  const [currentWeekStart, setCurrentWeekStart] = useState(
+    startOfWeek(today, { weekStartsOn: 1 }),
+  );
 
   const handlePreviousWeek = () => {
     setCurrentWeekStart(addDays(currentWeekStart, -7));
@@ -99,14 +132,22 @@ export default function CalendarPage() {
 
   //  Add a new schedule item to the weekly schedule
   const handleAddScheduleItem = () => {
-    const day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(new Date(newItem.timestamp));
-    
+    const day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+      new Date(newItem.timestamp),
+    );
+
     setWeeklySchedule((prev) => {
       const updatedDayItems = [...(prev[day] || []), newItem];
       return { ...prev, [day]: updatedDayItems };
     });
 
-    setNewItem({ title: "", type: "deadline", timestamp: Date.now(), endTimestamp: undefined, description: "" });
+    setNewItem({
+      title: "",
+      type: "deadline",
+      timestamp: Date.now(),
+      endTimestamp: undefined,
+      description: "",
+    });
     setModalOpen(false);
   };
 
@@ -123,22 +164,28 @@ export default function CalendarPage() {
         </button>
       </div>
 
-      { /* Navigation for the weeks */ }
+      {/* Navigation for the weeks */}
       <div className="flex items-center justify-center space-x-4 mb-4">
-        { /* <span className="text-xl font-semibold mb-1">{format(currentWeekStart, "yyyy")}</span> */ }
+        {/* <span className="text-xl font-semibold mb-1">{format(currentWeekStart, "yyyy")}</span> */}
 
-        <button onClick={handlePreviousWeek} className="text-gray-400 hover:text-white">
+        <button
+          onClick={handlePreviousWeek}
+          className="text-gray-400 hover:text-white"
+        >
           ◀
         </button>
         <span className="text-lg font-semibold">
           {`${formatDate(currentWeekStart)} - ${formatDate(currentWeekEnd)}`}
         </span>
-        <button onClick={handleNextWeek} className="text-gray-400 hover:text-white">
+        <button
+          onClick={handleNextWeek}
+          className="text-gray-400 hover:text-white"
+        >
           ▶
         </button>
       </div>
 
-      { /* Modal for adding a new schedule item */ }
+      {/* Modal for adding a new schedule item */}
       {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-gray-800 rounded-md p-5 shadow-lg w-96">
@@ -147,21 +194,25 @@ export default function CalendarPage() {
             <input
               type="text"
               value={newItem.title}
-              onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
+              onChange={(e) =>
+                setNewItem({ ...newItem, title: e.target.value })}
               placeholder="Title"
               className="w-full p-2 mb-3 border rounded border-gray-600 bg-gray-700 text-gray-200"
             />
 
             <Select
-              value={scheduleTypes.find(option => option.value === newItem.type)}
-              onChange={(option) => setNewItem({ ...newItem, type: option?.value || "deadline" })}
+              value={scheduleTypes.find((option) =>
+                option.value === newItem.type
+              )}
+              onChange={(option) =>
+                setNewItem({ ...newItem, type: option?.value || "deadline" })}
               options={scheduleTypes}
               className="mb-3"
               styles={{
                 singleValue: (base) => ({ ...base, color: "white" }),
                 control: (base, state) => ({
                   ...base,
-                  background: "#374151"
+                  background: "#374151",
                 }),
                 option: (styles, { isFocused }) => {
                   return {
@@ -177,7 +228,11 @@ export default function CalendarPage() {
             <label className="block mb-2 text-sm">Start Time:</label>
             <DatePicker
               selected={new Date(newItem.timestamp)}
-              onChange={(date) => setNewItem({ ...newItem, timestamp: date?.getTime() || Date.now() })}
+              onChange={(date) =>
+                setNewItem({
+                  ...newItem,
+                  timestamp: date?.getTime() || Date.now(),
+                })}
               className="mb-3 w-full p-2 border rounded border-gray-600 bg-gray-700 text-gray-200"
               showTimeSelect
               dateFormat="Pp"
@@ -185,8 +240,11 @@ export default function CalendarPage() {
 
             <label className="block mb-2 text-sm">End Time (optional):</label>
             <DatePicker
-              selected={newItem.endTimestamp ? new Date(newItem.endTimestamp) : null}
-              onChange={(date) => setNewItem({ ...newItem, endTimestamp: date?.getTime() })}
+              selected={newItem.endTimestamp
+                ? new Date(newItem.endTimestamp)
+                : null}
+              onChange={(date) =>
+                setNewItem({ ...newItem, endTimestamp: date?.getTime() })}
               className="mb-3 w-full p-2 border rounded border-gray-600 bg-gray-700 text-gray-200"
               showTimeSelect
               dateFormat="Pp"
@@ -194,7 +252,8 @@ export default function CalendarPage() {
 
             <textarea
               value={newItem.description}
-              onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+              onChange={(e) =>
+                setNewItem({ ...newItem, description: e.target.value })}
               placeholder="Description"
               className="w-full p-2 mb-3 border rounded border-gray-600 bg-gray-700 text-gray-200"
               rows={3}
@@ -218,39 +277,60 @@ export default function CalendarPage() {
         </div>
       )}
 
-      { /* Display the weekly schedule */ }
+      {/* Display the weekly schedule */}
       <div className="grid grid-cols-7 gap-3">
-
-        { /* For each day of the week, display the schedule items */ }
-        {Object.entries(weeklySchedule).map(([day, items]) => {
+        {/* For each day of the week, display the schedule items */}
+        {Object.entries(weeklySchedule).map(([day, items], index) => {
           // Filter out the items that are not in the current week
-            const itemsInWeek = items
+          const itemsInWeek = items
             .map((item) => ({
               ...item,
-              endTimestamp: item.endTimestamp || item.timestamp + 30 * 60 * 1000,
+              endTimestamp: item.endTimestamp ||
+                item.timestamp + 30 * 60 * 1000,
             }))
             .filter(
-              (item) => new Date(item.timestamp) >= currentWeekStart && new Date(item.timestamp) <= currentWeekEnd
+              (item) =>
+                new Date(item.timestamp) >= currentWeekStart &&
+                new Date(item.timestamp) <= currentWeekEnd,
             );
 
-          const sortedItems = itemsInWeek.sort((a, b) => a.timestamp - b.timestamp);
+          const sortedItems = itemsInWeek.sort((a, b) =>
+            a.timestamp - b.timestamp
+          );
 
           return (
-            <div key={day} className="bg-gray-800 rounded-md p-3 shadow-md z-10">
-              <h2 className="text-lg sm:text-xl font-semibold border-b border-gray-700 pb-1 mb-2">{day}</h2>
+            <div
+              key={day}
+              className="bg-gray-800 rounded-md p-3 shadow-md z-10"
+            >
+              <div className="border-b border-gray-700 pb-2 mb-2">
+                <h2 className="text-lg sm:text-xl font-semibold">{day}</h2>
+
+                <span className="text-xs sm:text-sm text-gray-500">
+                  {format(
+                    new Date(currentWeekStart).setDate(
+                      currentWeekStart.getDate() + index,
+                    ),
+                    "MMM d",
+                  )}
+                </span>
+              </div>
+
               <div className="relative">
                 <div className="grid grid-rows-24 gap-1">
-
-                  { /* For each hour of the day, display the schedule items */ }
+                  {/* For each hour of the day, display the schedule items */}
                   {Array.from({ length: 24 }, (_, hour) => {
                     const itemsAtThisHour = sortedItems.filter(
-                      (item) => new Date(item.timestamp).getHours() === hour
+                      (item) => new Date(item.timestamp).getHours() === hour,
                     );
 
                     return (
                       <div key={hour} className="relative h-8 sm:h-10 flex">
                         {itemsAtThisHour.map((item, index) => {
-                          const height = calculateHeight(item.timestamp, item.endTimestamp);
+                          const height = calculateHeight(
+                            item.timestamp,
+                            item.endTimestamp,
+                          );
                           return (
                             <div
                               key={index}
@@ -266,13 +346,18 @@ export default function CalendarPage() {
                               }`}
                               style={{
                                 height: `${height}px`,
-                                top: `${index * 30}px`, 
+                                top: `${index * 30}px`,
                               }}
                             >
                               <div className="flex justify-between">
-                                <span className="font-semibold">{item.title}</span>
+                                <span className="font-semibold">
+                                  {item.title}
+                                </span>
                                 <span className="text-[10px] sm:text-xs">
-                                  {formatTimestamp(item.timestamp)} {item.endTimestamp ? `- ${formatTimestamp(item.endTimestamp)}` : ""}
+                                  {formatTimestamp(item.timestamp)}{" "}
+                                  {item.endTimestamp
+                                    ? `- ${formatTimestamp(item.endTimestamp)}`
+                                    : ""}
                                 </span>
                               </div>
                               {item.description && (
@@ -286,7 +371,9 @@ export default function CalendarPage() {
                             </div>
                           );
                         })}
-                        <div className="text-gray-500 text-[10px] sm:text-xs ml-auto">{`${hour}:00`}</div>
+                        <div className="text-gray-500 text-[10px] sm:text-xs ml-auto">
+                          {`${hour}:00`}
+                        </div>
                       </div>
                     );
                   })}
