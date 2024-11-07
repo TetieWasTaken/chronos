@@ -151,6 +151,22 @@ export default function CalendarPage() {
     setModalOpen(false);
   };
 
+  // Set the day border colour ranging from gray to red based on the amount of items
+  // todo: change to amount of day occupied and severity later?
+  const dayBorderColor = (day: string) => {
+    const items = weeklySchedule[day] || [];
+    const itemCount = items.length;
+
+    if (itemCount === 0) return "border-gray-700";
+    if (itemCount === 1) return "border-emerald-500";
+    if (itemCount === 2) return "border-green-500";
+    if (itemCount === 3) return "border-lime-500";
+    if (itemCount === 4) return "border-yellow-500";
+    if (itemCount === 5) return "border-amber-500";
+    if (itemCount === 6) return "border-orange-500";
+    return "border-red-500";
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4 sm:p-6">
       <div className="flex justify-between items-center mb-4">
@@ -310,8 +326,16 @@ export default function CalendarPage() {
 
           return (
             <div key={day} className="bg-gray-800 rounded-md p-3 shadow-md">
-              <div className="border-b border-gray-500 pb-2 mb-2">
-                <h2 className="text-lg sm:text-xl font-semibold">{day}</h2>
+              <div
+                className={`border-b ${dayBorderColor(day)} pb-2 mb-2`}
+              >
+                <h2
+                  className={`text-lg sm:text-xl font-semibold ${
+                    index === today.getDay() - 1 ? "text-blue-500" : ""
+                  }`}
+                >
+                  {day}
+                </h2>
                 <span className="text-xs sm:text-sm text-gray-500">
                   {format(
                     new Date(currentWeekStart).setDate(
