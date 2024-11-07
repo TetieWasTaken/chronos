@@ -182,6 +182,97 @@ export default function CalendarPage() {
         </button>
       </div>
 
+      {modalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-gray-800 rounded-md p-5 shadow-lg w-96">
+            <h2 className="text-lg font-semibold mb-4">Add Schedule Item</h2>
+
+            <input
+              type="text"
+              value={newItem.title}
+              onChange={(e) =>
+                setNewItem({ ...newItem, title: e.target.value })}
+              placeholder="Title"
+              className="w-full p-2 mb-3 border rounded border-gray-600 bg-gray-700 text-gray-200"
+            />
+
+            <Select
+              value={scheduleTypes.find((option) =>
+                option.value === newItem.type
+              )}
+              onChange={(option) =>
+                setNewItem({ ...newItem, type: option?.value || "deadline" })}
+              options={scheduleTypes}
+              className="mb-3"
+              styles={{
+                singleValue: (base) => ({ ...base, color: "white" }),
+                control: (base, state) => ({
+                  ...base,
+                  background: "#374151",
+                }),
+                option: (styles, { isFocused }) => {
+                  return {
+                    ...styles,
+                    backgroundColor: isFocused ? "#4B5563" : "#374151",
+                    color: "white",
+                  };
+                },
+              }}
+              placeholder="Select Type"
+            />
+
+            <label className="block mb-2 text-sm">Start Time:</label>
+            <DatePicker
+              selected={new Date(newItem.timestamp)}
+              onChange={(date) =>
+                setNewItem({
+                  ...newItem,
+                  timestamp: date?.getTime() || Date.now(),
+                })}
+              className="mb-3 w-full p-2 border rounded border-gray-600 bg-gray-700 text-gray-200"
+              showTimeSelect
+              dateFormat="Pp"
+            />
+
+            <label className="block mb-2 text-sm">End Time (optional):</label>
+            <DatePicker
+              selected={newItem.endTimestamp
+                ? new Date(newItem.endTimestamp)
+                : null}
+              onChange={(date) =>
+                setNewItem({ ...newItem, endTimestamp: date?.getTime() })}
+              className="mb-3 w-full p-2 border rounded border-gray-600 bg-gray-700 text-gray-200"
+              showTimeSelect
+              dateFormat="Pp"
+            />
+
+            <textarea
+              value={newItem.description}
+              onChange={(e) =>
+                setNewItem({ ...newItem, description: e.target.value })}
+              placeholder="Description"
+              className="w-full p-2 mb-3 border rounded border-gray-600 bg-gray-700 text-gray-200"
+              rows={3}
+            />
+
+            <div className="flex justify-between">
+              <button
+                onClick={handleAddScheduleItem}
+                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setModalOpen(false)}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Display the weekly schedule */}
       <div className="grid grid-cols-[4rem_repeat(7,_1fr)] gap-3">
         {/* Hour column */}
@@ -234,8 +325,7 @@ export default function CalendarPage() {
               <div className="relative">
                 {Array.from({ length: 24 }, (_, hour) => {
                   const itemsAtThisHour = sortedItems.filter(
-                    (item) =>
-                      new Date(item.timestamp).getHours() === hour,
+                    (item) => new Date(item.timestamp).getHours() === hour,
                   );
 
                   return (
