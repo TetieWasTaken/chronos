@@ -127,7 +127,7 @@ export default function CalendarPage() {
   // Calculate the height of the schedule item based on the duration
   const calculateHeight = (start: number, end?: number) => {
     const durationMinutes = end ? (end - start) / (1000 * 60) : 30;
-    return durationMinutes * 0.75;
+    return durationMinutes * 0.65;
   };
 
   //  Add a new schedule item to the weekly schedule
@@ -183,16 +183,15 @@ export default function CalendarPage() {
       </div>
 
       {/* Display the weekly schedule */}
-      <div className="grid grid-cols-[4rem_repeat(7,_1fr)] gap-3" // The hour column takes up 4rem, and the 7 day columns take up the remaining space
-      >
+      <div className="grid grid-cols-[4rem_repeat(7,_1fr)] gap-3">
         {/* Hour column */}
-        <div className="flex flex-col justify-between w-16">
-          {/* empty space */}
-          <div className="h-[2.5rem]"></div>
-          {Array.from({ length: 25 }, (_, hour) => (
+        <div className="flex flex-col">
+          <div className="h-[2.5rem]"></div>{" "}
+          {/* Placeholder space for the day headers */}
+          {Array.from({ length: 24 }, (_, hour) => (
             <div
               key={hour}
-              className="text-gray-500 text-xs text-center border-b border-gray-700"
+              className="h-10 flex items-center justify-center text-gray-500 text-xs border-b border-gray-700"
             >
               {`${hour}:00`}
             </div>
@@ -219,10 +218,7 @@ export default function CalendarPage() {
           );
 
           return (
-            <div
-              key={day}
-              className="bg-gray-800 rounded-md p-3 shadow-md z-10"
-            >
+            <div key={day} className="bg-gray-800 rounded-md p-3 shadow-md">
               <div className="border-b border-gray-500 pb-2 mb-2">
                 <h2 className="text-lg sm:text-xl font-semibold">{day}</h2>
                 <span className="text-xs sm:text-sm text-gray-500">
@@ -236,62 +232,51 @@ export default function CalendarPage() {
               </div>
 
               <div className="relative">
-                <div className="grid grid-rows-24 gap-1">
-                  {/* For each hour of the day, display the schedule items */}
-                  {Array.from({ length: 24 }, (_, hour) => {
-                    const itemsAtThisHour = sortedItems.filter(
-                      (item) => new Date(item.timestamp).getHours() === hour,
-                    );
+                {Array.from({ length: 24 }, (_, hour) => {
+                  const itemsAtThisHour = sortedItems.filter(
+                    (item) =>
+                      new Date(item.timestamp).getHours() === hour,
+                  );
 
-                    return (
-                      <div key={hour} className="relative flex">
-                        {
-                          /* Hour label for testing:
-                        <div className="w-16 text-gray-500 text-xs text-center">
-                          {`${hour}:00`}
-                        </div>
-                         */
-                        }
-
-                        {/* Horizontal line for each hour */}
-                        <div className="absolute w-full border-t border-gray-700">
-                        </div>
-
-                        {/* Schedule items */}
-                        <div className="relative h-8 sm:h-10 w-full flex">
-                          {itemsAtThisHour.map((item, index) => {
-                            const height = calculateHeight(
-                              item.timestamp,
-                              item.endTimestamp,
-                            );
-                            return (
-                              <div
-                                key={index}
-                                className={`w-full p-2 rounded text-xs sm:text-sm flex items-center justify-center ${
-                                  item.type === "deadline"
-                                    ? "bg-red-500 text-white"
-                                    : item.type === "meeting"
-                                    ? "bg-blue-500 text-white"
-                                    : item.type === "study"
-                                    ? "bg-green-500 text-white"
-                                    : "bg-purple-500 text-white"
-                                }`}
-                                style={{
-                                  height: `${height}px`,
-                                  top: `${index * 30}px`,
-                                }}
-                              >
-                                <span className="font-semibold text-xs text-center">
-                                  {item.title}
-                                </span>
-                              </div>
-                            );
-                          })}
-                        </div>
+                  return (
+                    <div
+                      key={hour}
+                      className="relative h-10 border-t border-gray-700"
+                    >
+                      {/* Schedule items */}
+                      <div className="relative w-full flex">
+                        {itemsAtThisHour.map((item, itemIndex) => {
+                          const height = calculateHeight(
+                            item.timestamp,
+                            item.endTimestamp,
+                          );
+                          return (
+                            <div
+                              key={itemIndex}
+                              className={`absolute w-full p-2 rounded text-xs sm:text-sm flex items-center justify-center ${
+                                item.type === "deadline"
+                                  ? "bg-red-500 text-white"
+                                  : item.type === "meeting"
+                                  ? "bg-blue-500 text-white"
+                                  : item.type === "study"
+                                  ? "bg-green-500 text-white"
+                                  : "bg-purple-500 text-white"
+                              }`}
+                              style={{
+                                height: `${height}px`,
+                                top: `${itemIndex * height}px`,
+                              }}
+                            >
+                              <span className="font-semibold text-xs text-center">
+                                {item.title}
+                              </span>
+                            </div>
+                          );
+                        })}
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );
