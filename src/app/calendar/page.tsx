@@ -182,11 +182,23 @@ export default function CalendarPage() {
         </button>
       </div>
 
-      {/* Modal for adding a new schedule item */}
-      {/* Modal code stays the same */}
-
       {/* Display the weekly schedule */}
-      <div className="grid grid-cols-8 gap-3">
+      <div className="grid grid-cols-[4rem_repeat(7,_1fr)] gap-3" // The hour column takes up 4rem, and the 7 day columns take up the remaining space
+      >
+        {/* Hour column */}
+        <div className="flex flex-col justify-between w-16">
+          {/* empty space */}
+          <div className="h-[2.5rem]"></div>
+          {Array.from({ length: 25 }, (_, hour) => (
+            <div
+              key={hour}
+              className="text-gray-500 text-xs text-center border-b border-gray-700"
+            >
+              {`${hour}:00`}
+            </div>
+          ))}
+        </div>
+
         {/* For each day of the week, display the schedule items */}
         {Object.entries(weeklySchedule).map(([day, items], index) => {
           // Filter and sort the schedule items
@@ -233,6 +245,13 @@ export default function CalendarPage() {
 
                     return (
                       <div key={hour} className="relative flex">
+                        {
+                          /* Hour label for testing:
+                        <div className="w-16 text-gray-500 text-xs text-center">
+                          {`${hour}:00`}
+                        </div>
+                         */
+                        }
                         {/* Schedule items */}
                         <div className="relative h-8 sm:h-10 w-full flex">
                           {itemsAtThisHour.map((item, index) => {
@@ -264,9 +283,6 @@ export default function CalendarPage() {
                             );
                           })}
                         </div>
-                        <div className="text-gray-500 text-[10px] sm:text-xs ml-auto">
-                          {`${hour}:00`}
-                        </div>
                       </div>
                     );
                   })}
@@ -275,18 +291,6 @@ export default function CalendarPage() {
             </div>
           );
         })}
-
-        <div className="flex flex-col justify-between">
-          <div className="h-[2.5rem]"></div>{" "}
-          {Array.from({ length: 25 }, (_, hour) => (
-            <div
-              key={hour}
-              className="text-gray-500 text-xs text-center border-b border-gray-700"
-            >
-              {`${hour}:00`}
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
