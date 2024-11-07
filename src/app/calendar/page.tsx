@@ -223,7 +223,7 @@ export default function CalendarPage() {
               key={day}
               className="bg-gray-800 rounded-md p-3 shadow-md z-10"
             >
-              <div className="border-b border-gray-700 pb-2 mb-2">
+              <div className="border-b border-gray-500 pb-2 mb-2">
                 <h2 className="text-lg sm:text-xl font-semibold">{day}</h2>
                 <span className="text-xs sm:text-sm text-gray-500">
                   {format(
@@ -252,6 +252,11 @@ export default function CalendarPage() {
                         </div>
                          */
                         }
+
+                        {/* Horizontal line for each hour */}
+                        <div className="absolute w-full border-t border-gray-700">
+                        </div>
+
                         {/* Schedule items */}
                         <div className="relative h-8 sm:h-10 w-full flex">
                           {itemsAtThisHour.map((item, index) => {
