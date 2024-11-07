@@ -105,15 +105,6 @@ export default function CalendarPage() {
     description: "",
   });
 
-  // todo: format the timestamp in the correct locale
-  const formatTimestamp = (timestamp: number) => {
-    return new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    }).format(new Date(timestamp));
-  };
-
   // Week handling
   const today = new Date();
   const [currentWeekStart, setCurrentWeekStart] = useState(
