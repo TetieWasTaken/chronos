@@ -77,7 +77,14 @@ const initialWeeklySchedule: Record<string, ScheduleItem[]> = {
       timestamp: new Date("2024-11-08T14:00:00").getTime(),
     },
   ],
-  Saturday: [],
+  Saturday: [
+    {
+      title: "Free Day",
+      type: "event",
+      timestamp: new Date("2024-11-09T00:00:00").getTime(),
+      endTimestamp: new Date("2024-11-09T23:59:00").getTime(),
+    },
+  ],
   Sunday: [{
     title: "Final Exam",
     type: "deadline",
@@ -127,7 +134,9 @@ export default function CalendarPage() {
   // Calculate the height of the schedule item based on the duration
   const calculateHeight = (start: number, end?: number) => {
     const durationMinutes = end ? (end - start) / (1000 * 60) : 30;
-    return durationMinutes * 0.65;
+
+    // 2.5rem is 40px
+    return (durationMinutes / 60) * 40;
   };
 
   //  Add a new schedule item to the weekly schedule
