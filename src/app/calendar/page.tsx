@@ -379,7 +379,7 @@ export default function CalendarPage() {
                               style={{
                                 height: `${height}px`,
                                 top: `${itemIndex * height}px`,
-                                zIndex: 100 - itemIndex,
+                                zIndex: 10 - itemIndex,
                               }}
                             >
                               <span className="font-semibold text-xs text-center">
