@@ -131,6 +131,9 @@ export default function CalendarPage() {
     return "border-red-500";
   };
 
+  const currentHour = today.getHours();
+  const currentMinute = today.getMinutes();
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4 sm:p-6">
       <div className="flex justify-between items-center mb-4">
@@ -367,6 +370,19 @@ export default function CalendarPage() {
                     </div>
                   );
                 })}
+
+                {/* Current hour line */}
+                {new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+                      today,
+                    ) === day && (
+                  <div
+                    className="absolute left-0 right-0 h-0.5 bg-blue-500"
+                    style={{
+                      top: `${currentHour * 40 + (currentMinute / 60) * 40}px`,
+                    }}
+                  >
+                  </div>
+                )}
               </div>
             </div>
           );
