@@ -20,7 +20,10 @@ const scheduleTypes = [
 // Page
 export default function CalendarPage() {
   // States
-  const [weeklySchedule, setWeeklySchedule] = useState({});
+  const [weeklySchedule, setWeeklySchedule]: [
+    Record<string, ScheduleItem[]>,
+    Function,
+  ] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [newItem, setNewItem] = useState<ScheduleItem>({
     title: "",
@@ -74,9 +77,12 @@ export default function CalendarPage() {
       "Sunday",
     ];
 
-    const itemsByDay = daysOfWeek.reduce((acc, day) => {
-      return { ...acc, [day]: [] };
-    }, {});
+    const itemsByDay: Record<string, ScheduleItem[]> = daysOfWeek.reduce(
+      (acc, day) => {
+        return { ...acc, [day]: [] };
+      },
+      {},
+    );
 
     itemsInWeek.forEach((item) => {
       const day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
@@ -94,7 +100,7 @@ export default function CalendarPage() {
       new Date(newItem.timestamp),
     );
 
-    setWeeklySchedule((prev) => {
+    setWeeklySchedule((prev: Record<string, ScheduleItem[]>) => {
       const updatedDayItems = [...(prev[day] || []), newItem];
       return { ...prev, [day]: updatedDayItems };
     });
@@ -175,7 +181,15 @@ export default function CalendarPage() {
                 option.value === newItem.type
               )}
               onChange={(option) =>
-                setNewItem({ ...newItem, type: option?.value || "deadline" })}
+                setNewItem({
+                  ...newItem,
+                  type:
+                    (option?.value as
+                      | "deadline"
+                      | "meeting"
+                      | "study"
+                      | "event") || "deadline",
+                })}
               options={scheduleTypes}
               className="mb-3"
               styles={{
