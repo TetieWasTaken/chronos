@@ -183,12 +183,11 @@ export default function CalendarPage() {
               onChange={(option) =>
                 setNewItem({
                   ...newItem,
-                  type:
-                    (option?.value as
-                      | "deadline"
-                      | "meeting"
-                      | "study"
-                      | "event") || "deadline",
+                  type: (option?.value as
+                    | "deadline"
+                    | "meeting"
+                    | "study"
+                    | "event") || "deadline",
                 })}
               options={scheduleTypes}
               className="mb-3"
@@ -303,7 +302,11 @@ export default function CalendarPage() {
               >
                 <h2
                   className={`text-lg sm:text-xl font-semibold ${
-                    index === today.getDay() - 1 ? "text-blue-500" : ""
+                    new Date(currentWeekStart).setDate(
+                        currentWeekStart.getDate() + index,
+                      ) === today.setHours(0, 0, 0, 0)
+                      ? "text-blue-500"
+                      : ""
                   }`}
                 >
                   {day}
