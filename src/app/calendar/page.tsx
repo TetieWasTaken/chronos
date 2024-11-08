@@ -1,12 +1,13 @@
 "use client";
 
 // Imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 import { ScheduleItem } from "@/types";
 import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
+import { schedule } from "../example_assignment";
 
 // The different types that a schedule item can have
 const scheduleTypes = [
@@ -16,86 +17,10 @@ const scheduleTypes = [
   { value: "event", label: "Event" },
 ];
 
-// Temporary data for the initial weekly schedule
-const initialWeeklySchedule: Record<string, ScheduleItem[]> = {
-  Monday: [
-    {
-      title: "Math Assignment",
-      type: "deadline",
-      timestamp: new Date("2024-11-04T23:59:00").getTime(),
-    },
-    {
-      title: "Team Project Meeting",
-      type: "meeting",
-      timestamp: new Date("2024-11-04T15:00:00").getTime(),
-      endTimestamp: new Date("2024-11-04TT16:00:00").getTime(),
-      description: "Discuss project progress",
-    },
-  ],
-  Tuesday: [
-    {
-      title: "Study Group",
-      type: "study",
-      timestamp: new Date("2024-11-05T14:00:00").getTime(),
-    },
-  ],
-  Wednesday: [
-    {
-      title: "Webinar",
-      type: "event",
-      timestamp: new Date("2024-11-06T10:00:00").getTime(),
-      endTimestamp: new Date("2024-11-06T12:00:00").getTime(),
-      description: "Web development trends",
-    },
-  ],
-  Thursday: [
-    {
-      title: "Physics Lab Report",
-      type: "deadline",
-      timestamp: new Date("2024-11-07T23:59:00").getTime(),
-    },
-    {
-      title: "Study Group",
-      type: "study",
-      timestamp: new Date("2024-11-07T14:00:00").getTime(),
-    },
-    {
-      title: "Club Meeting",
-      type: "meeting",
-      timestamp: new Date("2024-11-07T18:00:00").getTime(),
-    },
-    {
-      title: "Club Event",
-      type: "event",
-      timestamp: new Date("2024-11-07T20:00:00").getTime(),
-    },
-  ],
-  Friday: [
-    {
-      title: "Study Group",
-      type: "study",
-      timestamp: new Date("2024-11-08T14:00:00").getTime(),
-    },
-  ],
-  Saturday: [
-    {
-      title: "Free Day",
-      type: "event",
-      timestamp: new Date("2024-11-09T00:00:00").getTime(),
-      endTimestamp: new Date("2024-11-09T23:59:00").getTime(),
-    },
-  ],
-  Sunday: [{
-    title: "Final Exam",
-    type: "deadline",
-    timestamp: new Date("2024-11-10T09:00:00").getTime(),
-  }],
-};
-
 // Page
 export default function CalendarPage() {
   // States
-  const [weeklySchedule, setWeeklySchedule] = useState(initialWeeklySchedule);
+  const [weeklySchedule, setWeeklySchedule] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [newItem, setNewItem] = useState<ScheduleItem>({
     title: "",
@@ -129,6 +54,39 @@ export default function CalendarPage() {
     // 2.5rem is 40px
     return (durationMinutes / 60) * 40;
   };
+
+  useEffect(() => {
+    // Load the schedule items that are within the current week
+    const itemsInWeek = schedule.filter(
+      (item) =>
+        new Date(item.timestamp) >= currentWeekStart &&
+        new Date(item.timestamp) <= currentWeekEnd,
+    );
+
+    // Group the items by day
+    const daysOfWeek = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+
+    const itemsByDay = daysOfWeek.reduce((acc, day) => {
+      return { ...acc, [day]: [] };
+    }, {});
+
+    itemsInWeek.forEach((item) => {
+      const day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+        new Date(item.timestamp),
+      );
+      itemsByDay[day].push(item);
+    });
+
+    setWeeklySchedule(itemsByDay);
+  }, [currentWeekStart]);
 
   //  Add a new schedule item to the weekly schedule
   const handleAddScheduleItem = () => {
