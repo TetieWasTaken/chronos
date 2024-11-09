@@ -4,7 +4,7 @@ export const metadata: Metadata = {
   description: "Calendar",
 };
 
-export default function DashboardLayout({
+export default function CalendarLayout({
   children,
 }: {
   children: React.ReactNode;
