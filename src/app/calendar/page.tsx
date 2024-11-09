@@ -1,7 +1,7 @@
 "use client";
 
 // Imports
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
@@ -22,7 +22,7 @@ export default function CalendarPage() {
   // States
   const [weeklySchedule, setWeeklySchedule]: [
     Record<string, ScheduleItem[]>,
-    Function,
+    Dispatch<SetStateAction<Record<string, ScheduleItem[]>>>,
   ] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [newItem, setNewItem] = useState<ScheduleItem>({
@@ -196,7 +196,7 @@ export default function CalendarPage() {
               className="mb-3"
               styles={{
                 singleValue: (base) => ({ ...base, color: "white" }),
-                control: (base, state) => ({
+                control: (base, _state) => ({
                   ...base,
                   background: "#374151",
                 }),
