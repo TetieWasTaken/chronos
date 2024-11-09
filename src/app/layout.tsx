@@ -14,8 +14,13 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Chronos",
+  title: {
+    template: "Chronos | %s",
+    default: "Chronos",
+  },
   description: "Home",
+  keywords: ["Chronos", "Home"],
+  creator: "TetieWasTaken",
 };
 
 export default function RootLayout({
