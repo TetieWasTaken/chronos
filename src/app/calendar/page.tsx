@@ -9,6 +9,11 @@ import { ScheduleItem } from "@/types";
 import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import { schedule } from "../example_assignment";
 
+// Firebase
+import { Calendar } from "@/utils/firebase/calendar";
+
+const calendar = new Calendar("12345");
+
 // The different types that a schedule item can have
 const scheduleTypes = [
   { value: "deadline", label: "Deadline" },
@@ -100,6 +105,9 @@ export default function CalendarPage() {
       new Date(newItem.timestamp),
     );
 
+    // Add the new item to the firebase collection
+    calendar.addAssignment(newItem);
+
     setWeeklySchedule((prev: Record<string, ScheduleItem[]>) => {
       const updatedDayItems = [...(prev[day] || []), newItem];
       return { ...prev, [day]: updatedDayItems };
@@ -112,6 +120,7 @@ export default function CalendarPage() {
       endTimestamp: undefined,
       description: "",
     });
+
     setModalOpen(false);
   };
 
