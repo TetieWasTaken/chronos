@@ -66,10 +66,12 @@ export default function CalendarPage() {
   );
 
   const handlePreviousWeek = () => {
+    setLoading(true);
     setCurrentWeekStart(addDays(currentWeekStart, -7));
   };
 
   const handleNextWeek = () => {
+    setLoading(true);
     setCurrentWeekStart(addDays(currentWeekStart, 7));
   };
 
