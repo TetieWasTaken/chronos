@@ -403,18 +403,21 @@ export default function CalendarPage() {
                             item.timestamp,
                             item.endTimestamp,
                           );
+                          const isPast =
+                            (item.endTimestamp || item.timestamp) < Date.now();
+
                           return (
                             <div
                               key={itemIndex}
                               className={`absolute w-full p-2 rounded text-xs sm:text-sm flex items-center justify-center ${
                                 item.type === "deadline"
-                                  ? "bg-red-500 text-white"
+                                  ? "bg-red-500"
                                   : item.type === "meeting"
-                                  ? "bg-blue-500 text-white"
+                                  ? "bg-blue-500"
                                   : item.type === "study"
-                                  ? "bg-green-500 text-white"
-                                  : "bg-purple-500 text-white"
-                              }`}
+                                  ? "bg-green-500 "
+                                  : "bg-purple-500"
+                              } ${isPast ? "opacity-50" : ""} text-white`}
                               style={{
                                 height: `${height}px`,
                                 top: `${itemIndex * height}px`,
