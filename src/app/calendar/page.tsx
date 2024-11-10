@@ -306,7 +306,7 @@ export default function CalendarPage() {
       <div className="grid grid-cols-[4rem_repeat(7,_1fr)] gap-3">
         {/* Hour column */}
         <div className="flex flex-col">
-          <div className="h-[2.5rem]"></div>{" "}
+          <div className="h-[42px]"></div>{" "}
           {/* Placeholder space for the day headers */}
           {Array.from({ length: 24 }, (_, hour) => (
             <div
@@ -411,6 +411,7 @@ export default function CalendarPage() {
                 })}
 
                 {/* Current hour line */}
+                {/* todo: only show on the current day, not weeks following */}
                 {new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
                       today,
                     ) === day && (
