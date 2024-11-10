@@ -342,6 +342,10 @@ export default function CalendarPage() {
 
         {/* For each day of the week, display the schedule items */}
         {Object.entries(weeklySchedule).map(([day, items], index) => {
+          const dayDate = new Date(currentWeekStart);
+          dayDate.setDate(currentWeekStart.getDate() + index);
+          const isToday = dayDate.toDateString() === today.toDateString();
+
           // Filter and sort the schedule items
           const itemsInWeek = items
             .map((item) => ({
@@ -366,11 +370,7 @@ export default function CalendarPage() {
               >
                 <h2
                   className={`text-lg sm:text-xl font-semibold ${
-                    new Date(currentWeekStart).setDate(
-                        currentWeekStart.getDate() + index,
-                      ) === today.setHours(0, 0, 0, 0)
-                      ? "text-blue-500"
-                      : ""
+                    isToday ? "text-blue-500" : ""
                   }`}
                 >
                   {day}
@@ -436,10 +436,7 @@ export default function CalendarPage() {
                 })}
 
                 {/* Current hour line */}
-                {/* todo: only show on the current day, not weeks following */}
-                {new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-                      today,
-                    ) === day && (
+                {isToday && (
                   <div
                     className="absolute left-0 right-0 h-0.5 bg-blue-500"
                     style={{
