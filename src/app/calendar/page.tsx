@@ -327,7 +327,11 @@ export default function CalendarPage() {
       )}
 
       {/* Display the weekly schedule */}
-      <div className="grid grid-cols-[4rem_repeat(7,_1fr)] gap-3">
+      <div
+        className={`grid grid-cols-[4rem_repeat(7,_1fr)] gap-3 ${
+          loading ? "blur-lg" : "blur-0"
+        }`}
+      >
         {/* Hour column */}
         <div className="flex flex-col">
           <div className="h-[42px]"></div>{" "}
