@@ -18,6 +18,7 @@ class FirebaseAuth {
   async signUpWithEmail(
     email: string,
     password: string,
+    redirectCallback?: () => void,
   ): Promise<UserCredential> {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -25,6 +26,10 @@ class FirebaseAuth {
         email,
         password,
       );
+
+      if (redirectCallback) {
+        redirectCallback();
+      }
 
       return userCredential;
     } catch (error: any) {
@@ -35,6 +40,7 @@ class FirebaseAuth {
   async signInWithEmail(
     email: string,
     password: string,
+    redirectCallback?: () => void,
   ): Promise<UserCredential> {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -42,15 +48,24 @@ class FirebaseAuth {
         email,
         password,
       );
+
+      if (redirectCallback) {
+        redirectCallback();
+      }
+
       return userCredential;
     } catch (error: any) {
       throw new Error(error.message);
     }
   }
 
-  async signOut(): Promise<void> {
+  async signOut(redirectCallback?: () => void): Promise<void> {
     try {
       await signOut(this.auth);
+
+      if (redirectCallback) {
+        redirectCallback();
+      }
     } catch (error: any) {
       throw new Error(error.message);
     }

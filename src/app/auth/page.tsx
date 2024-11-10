@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FirebaseAuth } from "@/utils/firebase/auth";
+import { useRouter } from "next/navigation";
 
 const auth = new FirebaseAuth();
 
@@ -9,10 +10,13 @@ export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSignIn = async () => {
     try {
-      await auth.signInWithEmail(email, password);
+      await auth.signInWithEmail(email, password, () => {
+        router.push("/calendar");
+      });
     } catch (error: any) {
       setError(error.message);
     }
@@ -20,7 +24,9 @@ export default function SignInPage() {
 
   const handleSignUp = async () => {
     try {
-      await auth.signUpWithEmail(email, password);
+      await auth.signUpWithEmail(email, password, () => {
+        router.push("/calendar");
+      });
     } catch (error: any) {
       setError(error.message);
     }
@@ -37,7 +43,9 @@ export default function SignInPage() {
 
   const handleSignOut = async () => {
     try {
-      await auth.signOut();
+      await auth.signOut(() => {
+        router.push("/calendar");
+      });
       setError("Signed out successfully.");
     } catch (error: any) {
       setError(error.message);

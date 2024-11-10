@@ -2,17 +2,20 @@
 
 // Imports
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 import { ScheduleItem } from "@/types";
 import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import { schedule } from "../example_assignment";
+import { FirebaseAuth } from "@/utils/firebase/auth";
 
 // Firebase
 import { Calendar } from "@/utils/firebase/calendar";
 
 const calendar = new Calendar("12345");
+const auth = new FirebaseAuth();
 
 // The different types that a schedule item can have
 const scheduleTypes = [
@@ -37,6 +40,23 @@ export default function CalendarPage() {
     endTimestamp: undefined,
     description: "",
   });
+
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+
+  const handleProfileClick = () => {
+    /* if (!user) {
+      router.push("/auth");
+    } */
+
+    router.push("/auth");
+  };
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+  }, []);
 
   // Week handling
   const today = new Date();
@@ -152,6 +172,16 @@ export default function CalendarPage() {
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
         >
           Add
+        </button>
+        {/* </div> */}
+
+        <button
+          onClick={handleProfileClick}
+          className={`${
+            user ? "bg-green-600" : "bg-gray-700"
+          } text-white font-semibold py-2 px-4 rounded hover:bg-green-500`}
+        >
+          {user ? "Profile (Signed In)" : "Sign In"}
         </button>
       </div>
 
