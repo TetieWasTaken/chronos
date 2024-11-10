@@ -8,6 +8,8 @@ import {
 } from "firebase/auth";
 import type { Auth, User, UserCredential } from "firebase/auth";
 
+// todo: github/sms/google providers
+
 class FirebaseAuth {
   private auth: Auth;
 
