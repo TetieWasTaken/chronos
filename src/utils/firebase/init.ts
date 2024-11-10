@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 // SDKs
 import {} from "firebase/auth";
@@ -23,6 +24,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
+const auth = getAuth(app);
 
 // Initialize Firebase Analytics
 let analytics = null;
@@ -31,4 +33,4 @@ if (await isSupported()) {
   analytics = getAnalytics(app);
 }
 
-export { analytics, app, firestore };
+export { analytics, app, auth, firestore };
