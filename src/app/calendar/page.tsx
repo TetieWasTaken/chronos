@@ -42,6 +42,7 @@ export default function CalendarPage() {
   });
 
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const handleProfileClick = () => {
@@ -85,38 +86,42 @@ export default function CalendarPage() {
 
   useEffect(() => {
     // Load the schedule items that are within the current week
-    const itemsInWeek = schedule.filter(
-      (item) =>
-        new Date(item.timestamp) >= currentWeekStart &&
-        new Date(item.timestamp) <= currentWeekEnd,
-    );
-
-    // Group the items by day
-    const daysOfWeek = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ];
-
-    const itemsByDay: Record<string, ScheduleItem[]> = daysOfWeek.reduce(
-      (acc, day) => {
-        return { ...acc, [day]: [] };
-      },
-      {},
-    );
-
-    itemsInWeek.forEach((item) => {
-      const day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-        new Date(item.timestamp),
+    setTimeout(() => {
+      const itemsInWeek = schedule.filter(
+        (item) =>
+          new Date(item.timestamp) >= currentWeekStart &&
+          new Date(item.timestamp) <= currentWeekEnd,
       );
-      itemsByDay[day].push(item);
-    });
 
-    setWeeklySchedule(itemsByDay);
+      // Group the items by day
+      const daysOfWeek = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ];
+
+      const itemsByDay: Record<string, ScheduleItem[]> = daysOfWeek.reduce(
+        (acc, day) => {
+          return { ...acc, [day]: [] };
+        },
+        {},
+      );
+
+      itemsInWeek.forEach((item) => {
+        const day = new Intl.DateTimeFormat("en-US", { weekday: "long" })
+          .format(
+            new Date(item.timestamp),
+          );
+        itemsByDay[day].push(item);
+      });
+
+      setWeeklySchedule(itemsByDay);
+      setLoading(false);
+    }, 1000);
   }, [currentWeekStart]);
 
   //  Add a new schedule item to the weekly schedule
@@ -164,8 +169,21 @@ export default function CalendarPage() {
   const currentMinute = today.getMinutes();
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-4 sm:p-6">
-      <div className="flex justify-between items-center mb-4">
+    <div
+      className={`min-h-screen bg-gray-900 text-gray-100 p-4 sm:p-6 transition-all duration-500`}
+    >
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+          <span className="text-2xl font-semibold text-white">
+            Loading...
+          </span>
+        </div>
+      )}
+      <div
+        className={`flex justify-between items-center mb-4 ${
+          loading ? "blur-lg" : "blur-0"
+        }`}
+      >
         <h1 className="text-2xl sm:text-3xl font-semibold">Weekly Schedule</h1>
         <button
           onClick={() => setModalOpen(true)}
@@ -186,7 +204,11 @@ export default function CalendarPage() {
       </div>
 
       {/* Navigation for the weeks */}
-      <div className="flex items-center justify-center space-x-4 mb-4">
+      <div
+        className={`flex items-center justify-center space-x-4 mb-4 ${
+          loading ? "blur-lg" : "blur-0"
+        }`}
+      >
         <button
           onClick={handlePreviousWeek}
           className="text-gray-400 hover:text-white"
