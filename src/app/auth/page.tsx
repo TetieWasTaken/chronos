@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FirebaseAuth } from "@/utils/firebase/auth";
 import { useRouter } from "next/navigation";
+import { FirebaseError } from "firebase/app";
 
 const auth = new FirebaseAuth();
 
@@ -17,8 +18,10 @@ export default function SignInPage() {
       await auth.signInWithEmail(email, password, () => {
         router.push("/calendar");
       });
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) setError(error.message);
+      else if (error instanceof Error) setError(error.message);
+      else setError("An unknown error occurred.");
     }
   };
 
@@ -27,8 +30,10 @@ export default function SignInPage() {
       await auth.signUpWithEmail(email, password, () => {
         router.push("/calendar");
       });
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) setError(error.message);
+      else if (error instanceof Error) setError(error.message);
+      else setError("An unknown error occurred.");
     }
   };
 
@@ -36,8 +41,10 @@ export default function SignInPage() {
     try {
       await auth.resetPassword(email);
       setError("Password reset email sent!");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) setError(error.message);
+      else if (error instanceof Error) setError(error.message);
+      else setError("An unknown error occurred.");
     }
   };
 
@@ -47,8 +54,10 @@ export default function SignInPage() {
         router.push("/calendar");
       });
       setError("Signed out successfully.");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) setError(error.message);
+      else if (error instanceof Error) setError(error.message);
+      else setError("An unknown error occurred.");
     }
   };
 

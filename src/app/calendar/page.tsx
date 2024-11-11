@@ -10,6 +10,7 @@ import { ScheduleItem } from "@/types";
 import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import { schedule } from "../example_assignment";
 import { FirebaseAuth } from "@/utils/firebase/auth";
+import { User } from "firebase/auth";
 
 // Firebase
 import { Calendar } from "@/utils/firebase/calendar";
@@ -40,7 +41,7 @@ export default function CalendarPage() {
     description: "",
   });
 
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [calendar, setCalendar] = useState<Calendar | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();

@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-process-globals -- NextJS uses process.env
+
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";

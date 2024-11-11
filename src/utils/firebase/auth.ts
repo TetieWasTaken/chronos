@@ -7,6 +7,7 @@ import {
   signOut,
 } from "firebase/auth";
 import type { Auth, User, UserCredential } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 // todo: github/sms/google providers
 
@@ -34,8 +35,9 @@ class FirebaseAuth {
       }
 
       return userCredential;
-    } catch (error: any) {
-      throw new Error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) throw new Error(error.message);
+      else throw new Error("An unknown error occurred.");
     }
   }
 
@@ -56,8 +58,9 @@ class FirebaseAuth {
       }
 
       return userCredential;
-    } catch (error: any) {
-      throw new Error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) throw new Error(error.message);
+      else throw new Error("An unknown error occurred.");
     }
   }
 
@@ -68,16 +71,18 @@ class FirebaseAuth {
       if (redirectCallback) {
         redirectCallback();
       }
-    } catch (error: any) {
-      throw new Error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) throw new Error(error.message);
+      else throw new Error("An unknown error occurred.");
     }
   }
 
   async resetPassword(email: string): Promise<void> {
     try {
       await sendPasswordResetEmail(this.auth, email);
-    } catch (error: any) {
-      throw new Error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) throw new Error(error.message);
+      else throw new Error("An unknown error occurred.");
     }
   }
 
