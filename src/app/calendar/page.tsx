@@ -137,7 +137,11 @@ export default function CalendarPage() {
     );
 
     // Add the new item to the firebase collection
-    calendar.addAssignment(newItem);
+    if (calendar) {
+      calendar.addAssignment(newItem);
+    } else {
+      console.log("No calendar found");
+    }
 
     setWeeklySchedule((prev: Record<string, ScheduleItem[]>) => {
       const updatedDayItems = [...(prev[day] || []), newItem];
