@@ -29,8 +29,12 @@ const auth = getAuth(app);
 // Initialize Firebase Analytics
 let analytics = null;
 
-if (await isSupported()) {
-  analytics = getAnalytics(app);
-}
+const initAnalytics = async () => {
+  if (await isSupported()) {
+    analytics = getAnalytics(app);
+  }
+};
+
+initAnalytics();
 
 export { analytics, app, auth, firestore };
