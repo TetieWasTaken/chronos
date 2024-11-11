@@ -14,7 +14,6 @@ import { FirebaseAuth } from "@/utils/firebase/auth";
 // Firebase
 import { Calendar } from "@/utils/firebase/calendar";
 
-const calendar = new Calendar("12345");
 const auth = new FirebaseAuth();
 
 // The different types that a schedule item can have
@@ -42,6 +41,7 @@ export default function CalendarPage() {
   });
 
   const [user, setUser] = useState<any>(null);
+  const [calendar, setCalendar] = useState<Calendar | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -56,6 +56,9 @@ export default function CalendarPage() {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
+      if (user) {
+        setCalendar(new Calendar(user.uid));
+      }
     });
   }, []);
 
