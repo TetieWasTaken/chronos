@@ -12,6 +12,17 @@ class Calendar {
   }
 
   /**
+   * @internal
+   * @param {ScheduleItem} data - The original data to be sanitised
+   * @returns {ScheduleItem} - The sanitised data
+   */
+  private sanitiseData(data: ScheduleItem): ScheduleItem {
+    return Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value !== undefined),
+    ) as ScheduleItem;
+  }
+
+  /**
    * Request calendar data from Firestore
    * @returns {Promise<ScheduleItem[]>} - An array of objects from the Firestore collection
    */
@@ -27,6 +38,7 @@ class Calendar {
    * @returns {Promise<void>} - A promise that resolves when the data has been added to Firestore
    */
   async addAssignment(data: ScheduleItem): Promise<void> {
+    data = this.sanitiseData(data);
     await addData(`schedules/${this.userId}/assignments`, data);
   }
 }
