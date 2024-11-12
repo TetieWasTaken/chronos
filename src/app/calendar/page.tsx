@@ -92,43 +92,51 @@ export default function CalendarPage() {
 
   useEffect(() => {
     // Load the schedule items that are within the current week
-    setTimeout(() => {
-      const itemsInWeek = schedule.filter(
-        (item) =>
-          new Date(item.timestamp) >= currentWeekStart &&
-          new Date(item.timestamp) <= currentWeekEnd,
-      );
+    if (calendar) {
+      const loadCalendar = async () => {
+        setLoading(true);
 
-      // Group the items by day
-      const daysOfWeek = [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-      ];
+        const schedule = await calendar.getCalendar();
 
-      const itemsByDay: Record<string, ScheduleItem[]> = daysOfWeek.reduce(
-        (acc, day) => {
-          return { ...acc, [day]: [] };
-        },
-        {},
-      );
+        const itemsInWeek = schedule.filter(
+          (item) =>
+            new Date(item.timestamp) >= currentWeekStart &&
+            new Date(item.timestamp) <= currentWeekEnd,
+        );
 
-      itemsInWeek.forEach((item) => {
-        const day = new Intl.DateTimeFormat("en-US", { weekday: "long" })
-          .format(
-            new Date(item.timestamp),
-          );
-        itemsByDay[day].push(item);
-      });
+        // Group the items by day
+        const daysOfWeek = [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday",
+        ];
 
-      setWeeklySchedule(itemsByDay);
-      setLoading(false);
-    }, 1000);
-  }, [currentWeekStart]);
+        const itemsByDay: Record<string, ScheduleItem[]> = daysOfWeek.reduce(
+          (acc, day) => {
+            return { ...acc, [day]: [] };
+          },
+          {},
+        );
+
+        itemsInWeek.forEach((item) => {
+          const day = new Intl.DateTimeFormat("en-US", { weekday: "long" })
+            .format(
+              new Date(item.timestamp),
+            );
+          itemsByDay[day].push(item);
+        });
+
+        setWeeklySchedule(itemsByDay);
+        setLoading(false);
+      };
+
+      loadCalendar();
+    }
+  }, [calendar, currentWeekStart]);
 
   //  Add a new schedule item to the weekly schedule
   const handleAddScheduleItem = () => {
