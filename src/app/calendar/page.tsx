@@ -8,7 +8,6 @@ import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 import { ScheduleItem } from "@/types";
 import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
-import { schedule } from "../example_assignment";
 import { FirebaseAuth } from "@/utils/firebase/auth";
 import { User } from "firebase/auth";
 
