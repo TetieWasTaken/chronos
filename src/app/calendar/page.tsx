@@ -43,6 +43,7 @@ export default function CalendarPage() {
   const [user, setUser] = useState<User | null>(null);
   const [calendar, setCalendar] = useState<Calendar | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authorising, setAuthorising] = useState(true);
   const router = useRouter();
 
   const handleProfileClick = () => {
@@ -58,7 +59,13 @@ export default function CalendarPage() {
       setUser(user);
       if (user) {
         setCalendar(new Calendar(user.uid));
+      } else {
+        router.push("/auth");
       }
+
+      console.log("User", user);
+
+      setAuthorising(false);
     });
   }, []);
 
@@ -91,49 +98,54 @@ export default function CalendarPage() {
 
   useEffect(() => {
     // Load the schedule items that are within the current week
-    if (calendar) {
-      const loadCalendar = async () => {
-        setLoading(true);
+    if (!authorising) {
+      if (calendar) {
+        const loadCalendar = async () => {
+          setLoading(true);
 
-        const schedule = await calendar.getCalendar();
+          const schedule = await calendar.getCalendar();
 
-        const itemsInWeek = schedule.filter(
-          (item) =>
-            new Date(item.timestamp) >= currentWeekStart &&
-            new Date(item.timestamp) <= currentWeekEnd,
-        );
+          const itemsInWeek = schedule.filter(
+            (item) =>
+              new Date(item.timestamp) >= currentWeekStart &&
+              new Date(item.timestamp) <= currentWeekEnd,
+          );
 
-        // Group the items by day
-        const daysOfWeek = [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday",
-        ];
+          // Group the items by day
+          const daysOfWeek = [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ];
 
-        const itemsByDay: Record<string, ScheduleItem[]> = daysOfWeek.reduce(
-          (acc, day) => {
-            return { ...acc, [day]: [] };
-          },
-          {},
-        );
+          const itemsByDay: Record<string, ScheduleItem[]> = daysOfWeek.reduce(
+            (acc, day) => {
+              return { ...acc, [day]: [] };
+            },
+            {},
+          );
 
-        itemsInWeek.forEach((item) => {
-          const day = new Intl.DateTimeFormat("en-US", { weekday: "long" })
-            .format(
-              new Date(item.timestamp),
-            );
-          itemsByDay[day].push(item);
-        });
+          itemsInWeek.forEach((item) => {
+            const day = new Intl.DateTimeFormat("en-US", { weekday: "long" })
+              .format(
+                new Date(item.timestamp),
+              );
+            itemsByDay[day].push(item);
+          });
 
-        setWeeklySchedule(itemsByDay);
-        setLoading(false);
-      };
+          setWeeklySchedule(itemsByDay);
+          setLoading(false);
+        };
 
-      loadCalendar();
+        loadCalendar();
+      } else {
+        // Redirect to the auth page because the user is not signed in
+        // router.push("/auth");
+      }
     }
   }, [calendar, currentWeekStart]);
 

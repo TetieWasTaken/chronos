@@ -51,7 +51,7 @@ export default function SignInPage() {
   const handleSignOut = async () => {
     try {
       await auth.signOut(() => {
-        router.push("/calendar");
+        /* router.push("/calendar"); */
       });
       setError("Signed out successfully.");
     } catch (error: unknown) {
