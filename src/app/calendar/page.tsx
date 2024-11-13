@@ -438,17 +438,22 @@ export default function CalendarPage() {
                           );
                           const isPast =
                             (item.endTimestamp || item.timestamp) < Date.now();
+                          const isShortDuration = height <= 40;
 
                           return (
                             <div
                               key={itemIndex}
-                              className={`absolute w-full p-2 rounded text-xs sm:text-sm flex items-center justify-center ${
+                              className={`absolute w-full p-2 rounded text-xs sm:text-sm ${
+                                isShortDuration
+                                  ? "flex items-center justify-center"
+                                  : "flex items-start"
+                              } ${
                                 item.type === "deadline"
                                   ? "bg-red-500"
                                   : item.type === "meeting"
                                   ? "bg-blue-500"
                                   : item.type === "study"
-                                  ? "bg-green-500 "
+                                  ? "bg-green-500"
                                   : "bg-purple-500"
                               } ${isPast ? "opacity-50" : ""} text-white`}
                               style={{
@@ -457,7 +462,11 @@ export default function CalendarPage() {
                                 zIndex: 10 - itemIndex,
                               }}
                             >
-                              <span className="font-semibold text-xs text-center">
+                              <span
+                                className={`font-semibold text-xs leading-tight overflow-hidden text-ellipsis whitespace-nowrap ${
+                                  isShortDuration ? "max-h-[40px]" : ""
+                                }`}
+                              >
                                 {item.title}
                               </span>
                             </div>
