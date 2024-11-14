@@ -44,6 +44,7 @@ export default function CalendarPage() {
   const [calendar, setCalendar] = useState<Calendar | null>(null);
   const [loading, setLoading] = useState(true);
   const [authorising, setAuthorising] = useState(true);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const router = useRouter();
 
   const handleProfileClick = () => {
@@ -440,9 +441,15 @@ export default function CalendarPage() {
                             (item.endTimestamp || item.timestamp) < Date.now();
                           const isShortDuration = height <= 40;
 
+                          const id = `${day}-${hour}-${itemIndex}`;
+                          const isHovered = hoveredItem === id;
+
                           return (
                             <div
                               key={itemIndex}
+                              onMouseEnter={() => setHoveredItem(id)}
+                              onMouseLeave={() =>
+                                setHoveredItem(null)}
                               className={`absolute w-full p-2 rounded text-xs sm:text-sm ${
                                 isShortDuration
                                   ? "flex items-center justify-center"
@@ -455,11 +462,19 @@ export default function CalendarPage() {
                                   : item.type === "study"
                                   ? "bg-green-500"
                                   : "bg-purple-500"
-                              } ${isPast ? "opacity-50" : ""} text-white`}
+                              } text-white transition-all duration-200`}
                               style={{
                                 height: `${height}px`,
                                 top: `${itemIndex * height}px`,
-                                zIndex: 10 - itemIndex,
+                                zIndex: isHovered ? 20 : 10 - itemIndex,
+                                transform: isHovered
+                                  ? "scale(1.05)"
+                                  : "scale(1)",
+                                opacity:
+                                  (hoveredItem !== null && !isHovered) ||
+                                    (isPast && !isHovered)
+                                    ? 0.5
+                                    : 1,
                               }}
                             >
                               <span
