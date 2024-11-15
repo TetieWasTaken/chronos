@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
-import { ScheduleItem } from "@/types";
+import type { APIScheduleItem, ScheduleItem } from "@/types";
 import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import { FirebaseAuth } from "@/utils/firebase/auth";
 import { User } from "firebase/auth";
@@ -32,7 +32,7 @@ export default function CalendarPage() {
     Dispatch<SetStateAction<Record<string, ScheduleItem[]>>>,
   ] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
-  const [newItem, setNewItem] = useState<ScheduleItem>({
+  const [newItem, setNewItem] = useState<APIScheduleItem>({
     title: "",
     type: "deadline",
     timestamp: Date.now(),
@@ -106,6 +106,7 @@ export default function CalendarPage() {
           setLoading(true);
 
           const schedule = await calendar.getCalendar();
+          console.log("Schedule", schedule);
 
           const itemsInWeek = schedule.filter(
             (item) =>
@@ -152,20 +153,29 @@ export default function CalendarPage() {
   }, [calendar, currentWeekStart]);
 
   //  Add a new schedule item to the weekly schedule
-  const handleAddScheduleItem = () => {
+  const handleAddScheduleItem = async () => {
     const day = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
       new Date(newItem.timestamp),
     );
 
+    let id: string | undefined = undefined;
+
     // Add the new item to the firebase collection
     if (calendar) {
-      calendar.addAssignment(newItem);
+      id = await calendar.addAssignment(newItem);
     } else {
       console.log("No calendar found");
     }
 
+    if (!id) {
+      console.error("Failed to add item");
+      return;
+    }
+
     setWeeklySchedule((prev: Record<string, ScheduleItem[]>) => {
-      const updatedDayItems = [...(prev[day] || []), newItem];
+      const itemToAdd = { ...newItem, id };
+
+      const updatedDayItems = [...(prev[day] || []), itemToAdd];
       return { ...prev, [day]: updatedDayItems };
     });
 
@@ -525,6 +535,8 @@ export default function CalendarPage() {
               ` - ${format(new Date(selectedItem.endTimestamp), "h:mm a")}`}
           </p>
           <p className="text-gray-300">{selectedItem.description}</p>
+
+          <p className="text-sm text-gray-400 mt-4">{selectedItem.id}</p>
         </div>
       )}
     </div>

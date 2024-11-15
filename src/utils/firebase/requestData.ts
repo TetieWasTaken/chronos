@@ -9,7 +9,8 @@ import { collection, type DocumentData, getDocs } from "firebase/firestore";
  */
 async function requestData(collectionPath: string): Promise<DocumentData[]> {
   const querySnapshot = await getDocs(collection(firestore, collectionPath));
-  const data = querySnapshot.docs.map((doc) => doc.data());
+  const data = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
   return data;
 }
 
