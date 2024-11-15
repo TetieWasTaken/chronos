@@ -47,6 +47,7 @@ export default function CalendarPage() {
   const memoisedAuthorising = useMemo(() => authorising, [authorising]);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<ScheduleItem | null>(null);
+  const [showMorning, setShowMorning] = useState(false);
   const router = useRouter();
 
   const handleProfileClick = () => {
@@ -383,13 +384,20 @@ export default function CalendarPage() {
         {/* Hour column */}
         <div className="flex flex-col">
           <div className="h-[42px]"></div>{" "}
+          <div
+            className="flex items-center justify-center text-gray-500 text-xs border-b border-gray-700 cursor-pointer"
+            onClick={() => setShowMorning(!showMorning)}
+          >
+            {showMorning ? "Hide Early Hours ▲" : "Show Early Hours ▼"}
+          </div>
+
           {/* Placeholder space for the day headers */}
-          {Array.from({ length: 24 }, (_, hour) => (
+          {Array.from({ length: showMorning ? 24 : 16 }, (_, hour) => (
             <div
-              key={hour}
+              key={showMorning ? hour : hour + 8}
               className="h-10 flex items-center justify-center text-gray-500 text-xs border-b border-gray-700"
             >
-              {`${hour}:00`}
+              {`${showMorning ? hour : hour + 8}:00`}
             </div>
           ))}
         </div>
@@ -440,92 +448,104 @@ export default function CalendarPage() {
               </div>
 
               <div className="relative">
-                {Array.from({ length: 24 }, (_, hour) => {
-                  const itemsAtThisHour = sortedItems.filter(
-                    (item) => new Date(item.timestamp).getHours() === hour,
-                  );
+                {Array.from(
+                  { length: showMorning ? 24 : 16 },
+                  (_, hour = 0) => {
+                    hour = showMorning ? hour : hour + 8;
 
-                  return (
-                    <div
-                      key={hour}
-                      className="relative h-10 border-t border-gray-700"
-                    >
-                      {/* Schedule items */}
-                      <div className="relative w-full flex">
-                        {itemsAtThisHour.map((item, itemIndex) => {
-                          const height = calculateHeight(
-                            item.timestamp,
-                            item.endTimestamp,
-                          );
-                          const isPast =
-                            (item.endTimestamp || item.timestamp) < Date.now();
-                          const isShortDuration = height <= 40;
+                    const itemsAtThisHour = sortedItems.filter(
+                      (item) => new Date(item.timestamp).getHours() === hour,
+                    );
 
-                          const id = `${day}-${hour}-${itemIndex}`;
-                          const isHovered = hoveredItem === id;
+                    return (
+                      <div
+                        key={hour}
+                        className="relative h-10 border-t border-gray-700"
+                      >
+                        {/* Schedule items */}
+                        <div className="relative w-full flex">
+                          {itemsAtThisHour.map((item, itemIndex) => {
+                            const height = calculateHeight(
+                              item.timestamp,
+                              item.endTimestamp,
+                            );
+                            const isPast =
+                              (item.endTimestamp || item.timestamp) <
+                                Date.now();
+                            const isShortDuration = height <= 40;
 
-                          return (
-                            <div
-                              key={itemIndex}
-                              onMouseEnter={() => setHoveredItem(id)}
-                              onMouseLeave={() =>
-                                setHoveredItem(null)}
-                              onClick={() => {
-                                if (
-                                  selectedItem && selectedItem.id === item.id
-                                ) {
-                                  setSelectedItem(null);
-                                } else {
-                                  setSelectedItem(item);
-                                }
-                              }}
-                              className={`absolute w-full p-2 rounded text-xs sm:text-sm ${
-                                isShortDuration
-                                  ? "flex items-center justify-center"
-                                  : "flex items-start"
-                              } ${
-                                item.type === "deadline"
-                                  ? "bg-red-500"
-                                  : item.type === "meeting"
-                                  ? "bg-blue-500"
-                                  : item.type === "study"
-                                  ? "bg-green-500"
-                                  : "bg-purple-500"
-                              } text-white transition-all duration-200`}
-                              style={{
-                                height: `${height}px`,
-                                top: `${itemIndex * height}px`,
-                                zIndex: isHovered ? 20 : 10 - itemIndex,
-                                transform: isHovered
-                                  ? "scale(1.05)"
-                                  : "scale(1)",
-                                opacity: (hoveredItem !== null && !isHovered) ||
-                                    (isPast && !isHovered)
-                                  ? 0.5
-                                  : 1,
-                              }}
-                            >
-                              <span
-                                className={`font-semibold text-xs leading-tight overflow-hidden text-ellipsis whitespace-nowrap ${
-                                  isShortDuration ? "max-h-[40px]" : ""
-                                }`}
+                            const id = `${day}-${hour}-${itemIndex}`;
+                            const isHovered = hoveredItem === id;
+
+                            return (
+                              <div
+                                key={itemIndex}
+                                onMouseEnter={() => setHoveredItem(id)}
+                                onMouseLeave={() => setHoveredItem(null)}
+                                onClick={() => {
+                                  if (
+                                    selectedItem && selectedItem.id === item.id
+                                  ) {
+                                    setSelectedItem(null);
+                                  } else {
+                                    setSelectedItem(item);
+                                  }
+                                }}
+                                className={`absolute w-full p-2 rounded text-xs sm:text-sm ${
+                                  isShortDuration
+                                    ? "flex items-center justify-center"
+                                    : "flex items-start"
+                                } ${
+                                  item.type === "deadline"
+                                    ? "bg-red-500"
+                                    : item.type === "meeting"
+                                    ? "bg-blue-500"
+                                    : item.type === "study"
+                                    ? "bg-green-500"
+                                    : "bg-purple-500"
+                                } text-white transition-all duration-200`}
+                                style={{
+                                  height: `${height}px`,
+                                  top: `${itemIndex * height}px`,
+                                  zIndex: isHovered ? 20 : 10 - itemIndex,
+                                  transform: isHovered
+                                    ? "scale(1.05)"
+                                    : "scale(1)",
+                                  opacity:
+                                    (hoveredItem !== null && !isHovered) ||
+                                      (isPast && !isHovered)
+                                      ? 0.5
+                                      : 1,
+                                }}
                               >
-                                {item.title}
-                              </span>
-                            </div>
-                          );
-                        })}
+                                <span
+                                  className={`font-semibold text-xs leading-tight overflow-hidden text-ellipsis whitespace-nowrap ${
+                                    isShortDuration ? "max-h-[40px]" : ""
+                                  }`}
+                                >
+                                  {item.title}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  },
+                )}
 
                 {/* Current hour line */}
                 {isToday && (
                   <div
                     className="absolute left-0 right-0 h-0.5 bg-blue-500"
                     style={{
-                      top: `${currentHour * 40 + (currentMinute / 60) * 40}px`,
+                      // ${currentHour * 40 + (currentMinute / 60) * 40}px
+                      top: `${
+                        showMorning
+                          ? currentHour * 40
+                          : currentHour * 40 - (8 * 40) +
+                            currentMinute / 60 * 40
+                      }px`,
                     }}
                   >
                   </div>
