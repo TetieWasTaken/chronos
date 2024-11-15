@@ -2,6 +2,8 @@ Built with ❤️ for High Seas 2024-2025
 
 <img src="/github/images/highseas/banner.svg" width="100" height="100"> <img src="/github/images/highseas/flag.svg" width="100" height="100">
 
+<img src="https://img.shields.io/endpoint?url=https://waka.hackclub.com/api/compat/shields/v1/U078EKGQW2H/interval:all_time/project:chronos&label=chronos&color=blue">
+
 # Chronos
 
 Chronos is a simple, lightweight assignment and time management tool for students. It is designed to help students keep track of their assignments and deadlines, and to help them manage their time effectively.
