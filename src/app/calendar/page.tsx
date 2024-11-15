@@ -65,8 +65,6 @@ export default function CalendarPage() {
         router.push("/auth");
       }
 
-      console.log("User", user);
-
       setAuthorising(false);
     });
   }, []);
@@ -106,7 +104,6 @@ export default function CalendarPage() {
           setLoading(true);
 
           const schedule = await calendar.getCalendar();
-          console.log("Schedule", schedule);
 
           const itemsInWeek = schedule.filter(
             (item) =>
@@ -465,13 +462,6 @@ export default function CalendarPage() {
                               onMouseLeave={() =>
                                 setHoveredItem(null)}
                               onClick={() => {
-                                console.log("Clicked", item);
-                                console.log("Selected", selectedItem);
-
-                                console.log(selectedItem?.id);
-                                console.log(item.id);
-
-                                console.log(selectedItem?.id === item.id);
                                 if (
                                   selectedItem && selectedItem.id === item.id
                                 ) {
