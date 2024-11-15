@@ -1,6 +1,6 @@
 Built with ❤️ for High Seas 2024-2025
 
-<img src="/github/images/highseas/banner.svg" width="100" height="100">
+<img src="/github/images/highseas/banner.svg" width="100" height="100"> <img src="/github/images/highseas/flag.svg" width="100" height="100">
 
 # Chronos
 
