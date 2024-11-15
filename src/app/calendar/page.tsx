@@ -67,7 +67,7 @@ export default function CalendarPage() {
 
       setAuthorising(false);
     });
-  }, []);
+  }, [router]);
 
   // Week handling
   const today = new Date();
@@ -298,7 +298,7 @@ export default function CalendarPage() {
               className="mb-3"
               styles={{
                 singleValue: (base) => ({ ...base, color: "white" }),
-                control: (base, _state) => ({
+                control: (base) => ({
                   ...base,
                   background: "#374151",
                 }),
