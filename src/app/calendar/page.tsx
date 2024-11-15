@@ -45,6 +45,7 @@ export default function CalendarPage() {
   const [loading, setLoading] = useState(true);
   const [authorising, setAuthorising] = useState(true);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ScheduleItem | null>(null);
   const router = useRouter();
 
   const handleProfileClick = () => {
@@ -358,7 +359,7 @@ export default function CalendarPage() {
       <div
         className={`grid grid-cols-[4rem_repeat(7,_1fr)] gap-3 ${
           loading ? "blur-lg" : "blur-0"
-        }`}
+        } ${selectedItem ? "pb-4" : ""}`}
       >
         {/* Hour column */}
         <div className="flex flex-col">
@@ -450,6 +451,7 @@ export default function CalendarPage() {
                               onMouseEnter={() => setHoveredItem(id)}
                               onMouseLeave={() =>
                                 setHoveredItem(null)}
+                              onClick={() => setSelectedItem(item)}
                               className={`absolute w-full p-2 rounded text-xs sm:text-sm ${
                                 isShortDuration
                                   ? "flex items-center justify-center"
@@ -470,11 +472,10 @@ export default function CalendarPage() {
                                 transform: isHovered
                                   ? "scale(1.05)"
                                   : "scale(1)",
-                                opacity:
-                                  (hoveredItem !== null && !isHovered) ||
+                                opacity: (hoveredItem !== null && !isHovered) ||
                                     (isPast && !isHovered)
-                                    ? 0.5
-                                    : 1,
+                                  ? 0.5
+                                  : 1,
                               }}
                             >
                               <span
@@ -507,6 +508,25 @@ export default function CalendarPage() {
           );
         })}
       </div>
+      {selectedItem && (
+        <div className="sticky bottom-0 fixed left-0 w-full bg-gray-800 p-4 border-t border-gray-700 shadow-lg transition-transform transform translate-y-0 z-50">
+          <button
+            onClick={() => setSelectedItem(null)}
+            className="mb-4 text-gray-400 hover:text-white"
+          >
+            Close
+          </button>
+          <h2 className="text-lg font-semibold text-white mb-2">
+            {selectedItem.title}
+          </h2>
+          <p className="text-sm text-gray-400 mb-4">
+            {format(new Date(selectedItem.timestamp), "MMM d, yyyy h:mm a")}
+            {selectedItem.endTimestamp &&
+              ` - ${format(new Date(selectedItem.endTimestamp), "h:mm a")}`}
+          </p>
+          <p className="text-gray-300">{selectedItem.description}</p>
+        </div>
+      )}
     </div>
   );
 }
