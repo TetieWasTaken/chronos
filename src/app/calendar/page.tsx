@@ -464,7 +464,22 @@ export default function CalendarPage() {
                               onMouseEnter={() => setHoveredItem(id)}
                               onMouseLeave={() =>
                                 setHoveredItem(null)}
-                              onClick={() => setSelectedItem(item)}
+                              onClick={() => {
+                                console.log("Clicked", item);
+                                console.log("Selected", selectedItem);
+
+                                console.log(selectedItem?.id);
+                                console.log(item.id);
+
+                                console.log(selectedItem?.id === item.id);
+                                if (
+                                  selectedItem && selectedItem.id === item.id
+                                ) {
+                                  setSelectedItem(null);
+                                } else {
+                                  setSelectedItem(item);
+                                }
+                              }}
                               className={`absolute w-full p-2 rounded text-xs sm:text-sm ${
                                 isShortDuration
                                   ? "flex items-center justify-center"
