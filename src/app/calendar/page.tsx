@@ -227,7 +227,10 @@ export default function CalendarPage() {
       >
         <h1 className="text-2xl sm:text-3xl font-semibold">Weekly Schedule</h1>
         <button
-          onClick={() => setModalOpen(true)}
+          onClick={() => {
+            setSelectedItem(null);
+            setModalOpen(true);
+          }}
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
         >
           Add
@@ -518,6 +521,7 @@ export default function CalendarPage() {
           );
         })}
       </div>
+
       {selectedItem && (
         <div className="sticky bottom-0 fixed left-0 w-full bg-gray-800 p-4 border-t border-gray-700 shadow-lg transition-transform transform translate-y-0 z-50">
           <button
