@@ -2,7 +2,7 @@
 
 Chronos is a simple, lightweight assignment and time management tool for students. It is designed to help students keep track of their assignments and deadlines, and to help them manage their time effectively.
 
-Chronos is built with <img src=[React] width="20" height="20"> React, <img src=[Next] width="20" height="20"> Next.js, <img src=[TypeScript] width="20" height="20"> TypeScript, <img src=[Tailwind] width="20" height="20"> Tailwind CSS, <img src=[Firebase] width="20" height="20"> Firebase, <img src=[Firebase-Firestore] width="20" height="20"> Firestore, and <img src=[Firebase-Authentication] width="20" height="20"> Firebase Authentication.
+Chronos is built with<img src="/github/images/next/logo.svg" width="20" height="20"> Next.js, <img src="/github/images/react/logo.svg" width="20" height="20"> React, <img src="/github/images/tailwind/logo.svg" width="20" height="20"> Tailwind CSS, and <img src="/github/images/typescript/logo.svg" width="20" height="20"> TypeScript. It uses <img src="/github/images/firebase/logo.svg" width="20" height="20"> Firebase for authentication and <img src="/github/images/firebase/firestore.svg" width="20" height="20"> Firestore for the database.
 
 ## Firestore structure
 
