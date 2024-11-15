@@ -67,7 +67,7 @@ export default function CalendarPage() {
 
       setAuthorising(false);
     });
-  }, [router]);
+  }, []);
 
   // Week handling
   const today = new Date();
@@ -147,7 +147,7 @@ export default function CalendarPage() {
         // router.push("/auth");
       }
     }
-  }, [calendar, currentWeekStart, currentWeekEnd, authorising]);
+  }, [calendar, currentWeekStart]);
 
   //  Add a new schedule item to the weekly schedule
   const handleAddScheduleItem = async () => {
@@ -298,7 +298,7 @@ export default function CalendarPage() {
               className="mb-3"
               styles={{
                 singleValue: (base) => ({ ...base, color: "white" }),
-                control: (base) => ({
+                control: (base, _state) => ({
                   ...base,
                   background: "#374151",
                 }),
