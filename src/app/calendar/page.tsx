@@ -1,7 +1,7 @@
 "use client";
 
 // Imports
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
@@ -44,6 +44,7 @@ export default function CalendarPage() {
   const [calendar, setCalendar] = useState<Calendar | null>(null);
   const [loading, setLoading] = useState(true);
   const [authorising, setAuthorising] = useState(true);
+  const memoisedAuthorising = useMemo(() => authorising, [authorising]);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<ScheduleItem | null>(null);
   const router = useRouter();
@@ -84,8 +85,10 @@ export default function CalendarPage() {
     setLoading(true);
     setCurrentWeekStart(addDays(currentWeekStart, 7));
   };
-
-  const currentWeekEnd = endOfWeek(currentWeekStart, { weekStartsOn: 1 });
+  const currentWeekEnd = useMemo(
+    () => endOfWeek(currentWeekStart, { weekStartsOn: 1 }),
+    [currentWeekStart],
+  );
   const formatDate = (date: Date) => format(date, "MMM d");
 
   // Calculate the height of the schedule item based on the duration
@@ -147,7 +150,13 @@ export default function CalendarPage() {
         // router.push("/auth");
       }
     }
-  }, [calendar, currentWeekStart]);
+  }, [
+    calendar,
+    currentWeekStart,
+    currentWeekEnd,
+    memoisedAuthorising,
+    authorising,
+  ]);
 
   //  Add a new schedule item to the weekly schedule
   const handleAddScheduleItem = async () => {
