@@ -138,6 +138,11 @@ export default function CalendarPage() {
               .format(
                 new Date(item.timestamp),
               );
+
+            if (new Date(item.timestamp).getHours() < 8 && !showMorning) {
+              setShowMorning(true);
+            }
+
             itemsByDay[day].push(item);
           });
 
