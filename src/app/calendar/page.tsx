@@ -561,14 +561,13 @@ export default function CalendarPage() {
                 {/* Current hour line */}
                 {isToday && (
                   <div
-                    className="absolute left-0 right-0 h-0.5 bg-blue-500"
+                    className="absolute left-0 right-0 h-0.5 bg-blue-500 transition-all duration-500"
                     style={{
                       top: `${
                         showMorning
-                          ? currentHour * 40 +
-                            currentMinute / 60 * 40
-                          : currentHour * 40 - (8 * 40) +
-                            currentMinute / 60 * 40
+                          ? currentHour * 40 + (currentMinute / 60) * 40
+                          : currentHour * 40 - 8 * 40 +
+                            (currentMinute / 60) * 40
                       }px`,
                     }}
                   >
