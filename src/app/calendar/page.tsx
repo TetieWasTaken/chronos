@@ -390,7 +390,7 @@ export default function CalendarPage() {
       >
         {/* Hour column */}
         <div className="flex flex-col">
-          <div className="h-[42px]"></div>{" "}
+          <div className="h-[9px]"></div>{" "}
           <div
             className="flex items-center justify-center text-gray-500 text-xs border-b border-gray-700 cursor-pointer"
             onClick={() => setShowMorning(!showMorning)}
@@ -549,7 +549,8 @@ export default function CalendarPage() {
                       // ${currentHour * 40 + (currentMinute / 60) * 40}px
                       top: `${
                         showMorning
-                          ? currentHour * 40
+                          ? currentHour * 40 +
+                            currentMinute / 60 * 40
                           : currentHour * 40 - (8 * 40) +
                             currentMinute / 60 * 40
                       }px`,
