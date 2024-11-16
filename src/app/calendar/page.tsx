@@ -390,7 +390,7 @@ export default function CalendarPage() {
       >
         {/* Hour column */}
         <div className="flex flex-col">
-          <div className="h-[9px]"></div>{" "}
+          <div className="h-[9px]"></div>
           <div
             className="flex items-center justify-center text-gray-500 text-xs border-b border-gray-700 cursor-pointer"
             onClick={() => setShowMorning(!showMorning)}
@@ -398,13 +398,30 @@ export default function CalendarPage() {
             {showMorning ? "Hide Early Hours ▲" : "Show Early Hours ▼"}
           </div>
 
-          {/* Placeholder space for the day headers */}
-          {Array.from({ length: showMorning ? 24 : 16 }, (_, hour) => (
+          {/* Morning Hours */}
+          <div
+            className={`transition-all duration-500 overflow-hidden`}
+            style={{
+              height: showMorning ? "320px" : "0",
+            }}
+          >
+            {Array.from({ length: 8 }, (_, hour) => (
+              <div
+                key={hour}
+                className="h-10 flex items-center justify-center text-gray-500 text-xs border-b border-gray-700"
+              >
+                {`${hour}:00`}
+              </div>
+            ))}
+          </div>
+
+          {/* Remaining Hours */}
+          {Array.from({ length: 16 }, (_, hour) => (
             <div
-              key={showMorning ? hour : hour + 8}
+              key={hour + 8}
               className="h-10 flex items-center justify-center text-gray-500 text-xs border-b border-gray-700"
             >
-              {`${showMorning ? hour : hour + 8}:00`}
+              {`${hour + 8}:00`}
             </div>
           ))}
         </div>
@@ -546,7 +563,6 @@ export default function CalendarPage() {
                   <div
                     className="absolute left-0 right-0 h-0.5 bg-blue-500"
                     style={{
-                      // ${currentHour * 40 + (currentMinute / 60) * 40}px
                       top: `${
                         showMorning
                           ? currentHour * 40 +
