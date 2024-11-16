@@ -11,20 +11,10 @@ Chronos is a simple, lightweight assignment and time management tool for student
 
 Chronos is built with <img src="/github/images/next/logo.svg" width="20" height="20"> Next.js, <img src="/github/images/react/logo.svg" width="20" height="20"> React, <img src="/github/images/tailwind/logo.svg" width="20" height="20"> Tailwind CSS, and <img src="/github/images/typescript/logo.svg" width="20" height="20"> TypeScript. It uses <img src="/github/images/firebase/logo.svg" width="20" height="20"> Firebase for authentication and <img src="/github/images/firebase/firestore.svg" width="20" height="20"> Firestore for the database.
 
-## Firestore structure
-
-Each user has their own unique base64 ID.
-
-```
-schedules
-  - userID
-    - assignments
-      - assignmentID
-        - title
-        - type
-        - timestamp
-        - endTimestamp
-        - description
-```
+## Features
+- **Assignment Management**: Add, edit, and delete assignments.
+- **Deadline Tracking**: Keep track of assignment deadlines.
+- **Time Management**: Plan your time effectively with a built-in calendar.
+- **User Authentication**: Sign in with your Google account.
 
 All rights to brand logos belong to their respective owners. This project is not affiliated with any of the brands mentioned above.
