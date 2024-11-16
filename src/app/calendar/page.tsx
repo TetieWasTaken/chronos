@@ -493,6 +493,7 @@ export default function CalendarPage() {
                               item.timestamp,
                               item.endTimestamp,
                             );
+
                             const isPast =
                               (item.endTimestamp || item.timestamp) <
                                 Date.now();
@@ -500,6 +501,20 @@ export default function CalendarPage() {
 
                             const id = `${day}-${hour}-${itemIndex}`;
                             const isHovered = hoveredItem === id;
+
+                            const isActive = () => {
+                              if (item.endTimestamp) {
+                                return (
+                                  new Date(item.timestamp) <= today &&
+                                  new Date(item.endTimestamp) >= today
+                                );
+                              }
+                              return (
+                                new Date(item.timestamp) <= today &&
+                                new Date(item.timestamp + 30 * 60 * 1000) >=
+                                  today
+                              );
+                            };
 
                             return (
                               <div
@@ -527,7 +542,11 @@ export default function CalendarPage() {
                                     : item.type === "study"
                                     ? "bg-green-500"
                                     : "bg-purple-500"
-                                } text-white transition-all duration-200`}
+                                } text-white transition-all duration-200 ${
+                                  isHovered ? "z-50" : ""
+                                } ${isShortDuration ? "h-[40px]" : ""} ${
+                                  isPast ? "opacity-50" : ""
+                                }`}
                                 style={{
                                   height: `${height}px`,
                                   top: `${itemIndex * height}px`,
@@ -542,6 +561,13 @@ export default function CalendarPage() {
                                       : 1,
                                 }}
                               >
+                                {isActive() && (
+                                  <span
+                                    className="animate-ping absolute top-2 right-2 w-2 h-2 rounded-full bg-yellow-500"
+                                    style={{ zIndex: 30 }}
+                                  >
+                                  </span>
+                                )}
                                 <span
                                   className={`font-semibold text-xs leading-tight overflow-hidden text-ellipsis whitespace-nowrap ${
                                     isShortDuration ? "max-h-[40px]" : ""
