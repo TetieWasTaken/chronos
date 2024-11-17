@@ -8,12 +8,13 @@ import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
-import type { APIScheduleItem, ScheduleItem } from "@/types";
+import type { APIScheduleItem, ScheduleItem, ScheduleTypesType } from "@/types";
 import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import { FirebaseAuth } from "@/utils/firebase/auth";
 import { User } from "firebase/auth";
 import { COLOURS, SCHEDULE_TYPES } from "@/constants";
 import Icon from "@hackclub/icons";
+import { BlockPicker } from "react-color";
 
 // Firebase
 import { Calendar } from "@/utils/calendar";
@@ -45,6 +46,10 @@ export default function CalendarPage() {
   const [user, setUser] = useState<User | null>(null);
   const [calendar, setCalendar] = useState<Calendar | null>(null);
   const [preferences, setPreferences] = useState<Preferences | null>(null);
+  const [assignmentColours, setAssignmentColours] = useState<
+    Record<string, string>
+  >(COLOURS);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [authorising, setAuthorising] = useState(true);
   const memoisedAuthorising = useMemo(() => authorising, [authorising]);
@@ -52,6 +57,17 @@ export default function CalendarPage() {
   const [selectedItem, setSelectedItem] = useState<ScheduleItem | null>(null);
   const [showMorning, setShowMorning] = useState(false);
   const router = useRouter();
+
+  const updateColour = (type: ScheduleTypesType, colour: string) => {
+    setAssignmentColours((prev) => ({
+      ...prev,
+      [type]: colour,
+    }));
+
+    if (preferences) {
+      preferences.setColour(type, colour); // Assuming a method to save in Preferences
+    }
+  };
 
   const handleProfileClick = () => {
     /* if (!user) {
@@ -209,7 +225,7 @@ export default function CalendarPage() {
 
   // Set the day border colour ranging from gray to red based on the amount of items
   // todo: change to amount of day occupied and severity later?
-  const dayBorderColor = (day: string) => {
+  const dayBorderColour = (day: string) => {
     const items = weeklySchedule[day] || [];
     const itemCount = items.length;
 
@@ -270,6 +286,7 @@ export default function CalendarPage() {
             glyph="settings"
             size={32}
             className="text-gray-400 cursor-pointer hover:text-white"
+            onClick={() => setSettingsOpen(true)}
           />
         </div>
       </div>
@@ -296,6 +313,39 @@ export default function CalendarPage() {
           ▶
         </button>
       </div>
+
+      {settingsOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-gray-800 rounded-md p-5 shadow-lg w-80">
+            <h2 className="text-lg font-semibold mb-4">Settings</h2>
+
+            <div className="grid grid-cols-2 gap-6">
+              {SCHEDULE_TYPES.map((type) => (
+                <div key={type} className="mb-6">
+                  <p className="text-gray-300 font-medium mb-2">
+                    {type.charAt(0).toUpperCase() + type.slice(1)}:
+                  </p>
+                  <BlockPicker
+                    color={assignmentColours[type] || "#FFFFFF"}
+                    onChangeComplete={(colour) =>
+                      updateColour(type, colour.hex)}
+                    width="100%"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-end mt-6">
+              <button
+                onClick={() => setSettingsOpen(false)}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -461,7 +511,7 @@ export default function CalendarPage() {
           return (
             <div key={day} className="bg-gray-800 rounded-md p-3 shadow-md">
               <div
-                className={`border-b ${dayBorderColor(day)} pb-2 mb-2`}
+                className={`border-b ${dayBorderColour(day)} pb-2 mb-2`}
               >
                 <h2
                   className={`text-lg sm:text-xl font-semibold ${

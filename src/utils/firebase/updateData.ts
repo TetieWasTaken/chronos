@@ -12,3 +12,5 @@ async function updateData(documentPath: string, data: object): Promise<void> {
   const docRef = doc(firestore, documentPath);
   await updateDoc(docRef, data);
 }
+
+export { updateData };

@@ -1,5 +1,10 @@
 import { requestData } from "./firebase/requestData";
-import type { APIPreferencesType, PreferencesType } from "@/types";
+import { updateData } from "./firebase/updateData";
+import type {
+  APIPreferencesType,
+  PreferencesType,
+  ScheduleTypesType,
+} from "@/types";
 
 class Preferences {
   private userId: string;
@@ -18,6 +23,12 @@ class Preferences {
       return data.reduce((acc, cur) => {
         return { ...acc, [cur.id]: cur };
       }, {} as PreferencesType);
+    });
+  }
+
+  async setColour(type: ScheduleTypesType, colour: string): Promise<void> {
+    return updateData(`users/${this.userId}/preferences/theme`, {
+      [type]: colour,
     });
   }
 }
