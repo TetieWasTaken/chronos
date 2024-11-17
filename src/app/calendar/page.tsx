@@ -13,6 +13,7 @@ import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import { FirebaseAuth } from "@/utils/firebase/auth";
 import { User } from "firebase/auth";
 import { COLOURS, SCHEDULE_TYPES } from "@/constants";
+import Icon from "@hackclub/icons";
 
 // Firebase
 import { Calendar } from "@/utils/calendar";
@@ -260,6 +261,12 @@ export default function CalendarPage() {
         >
           {user ? "Profile (Signed In)" : "Sign In"}
         </button>
+
+        <Icon
+          glyph="settings"
+          size={32}
+          className="text-gray-400 hover:text-white"
+        />
       </div>
 
       {/* Navigation for the weeks */}
