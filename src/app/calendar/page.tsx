@@ -241,32 +241,36 @@ export default function CalendarPage() {
           loading ? "blur-lg" : "blur-0"
         }`}
       >
-        <h1 className="text-2xl sm:text-3xl font-semibold">Weekly Schedule</h1>
-        <button
-          onClick={() => {
-            setSelectedItem(null);
-            setModalOpen(true);
-          }}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-        >
-          Add
-        </button>
-        {/* </div> */}
+        <div className="flex-grow">
+          <h1 className="text-2xl sm:text-3xl font-semibold">
+            Weekly Schedule
+          </h1>
+        </div>
+        <div className="flex space-x-3 items-center">
+          <button
+            onClick={() => {
+              setSelectedItem(null);
+              setModalOpen(true);
+            }}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+          >
+            Add
+          </button>
+          <button
+            onClick={handleProfileClick}
+            className={`${
+              user ? "bg-green-600" : "bg-gray-700"
+            } text-white font-semibold py-2 px-4 rounded hover:bg-green-500`}
+          >
+            {user ? "Profile (Signed In)" : "Sign In"}
+          </button>
 
-        <button
-          onClick={handleProfileClick}
-          className={`${
-            user ? "bg-green-600" : "bg-gray-700"
-          } text-white font-semibold py-2 px-4 rounded hover:bg-green-500`}
-        >
-          {user ? "Profile (Signed In)" : "Sign In"}
-        </button>
-
-        <Icon
-          glyph="settings"
-          size={32}
-          className="text-gray-400 hover:text-white"
-        />
+          <Icon
+            glyph="settings"
+            size={32}
+            className="text-gray-400 cursor-pointer hover:text-white"
+          />
+        </div>
       </div>
 
       {/* Navigation for the weeks */}
