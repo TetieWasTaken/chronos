@@ -17,3 +17,7 @@ export type ScheduleItem = APIScheduleItem & {
 export type PreferencesType = {
   theme: Record<ScheduleTypesType, string>;
 };
+
+export type APIPreferencesType = PreferencesType & {
+  id: string;
+};

@@ -166,6 +166,7 @@ export default function CalendarPage() {
     currentWeekEnd,
     memoisedAuthorising,
     authorising,
+    showMorning,
   ]);
 
   //  Add a new schedule item to the weekly schedule

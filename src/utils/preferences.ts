@@ -1,5 +1,5 @@
 import { requestData } from "./firebase/requestData";
-import type { PreferencesType } from "@/types";
+import type { APIPreferencesType, PreferencesType } from "@/types";
 
 class Preferences {
   private userId: string;
@@ -11,13 +11,13 @@ class Preferences {
   async getPreferences(): Promise<PreferencesType> {
     const data = requestData(
       `users/${this.userId}/preferences`,
-    );
+    ) as Promise<APIPreferencesType[]>;
 
     // Convert array to object, with the id as the key
     return data.then((data) => {
       return data.reduce((acc, cur) => {
         return { ...acc, [cur.id]: cur };
-      }, {});
+      }, {} as PreferencesType);
     });
   }
 }
