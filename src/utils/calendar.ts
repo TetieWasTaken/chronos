@@ -1,5 +1,5 @@
-import { requestData } from "./requestData";
-import { addData } from "./addData";
+import { requestData } from "./firebase/requestData";
+import { addData } from "./firebase/addData";
 import type { APIScheduleItem, ScheduleItem } from "@/types";
 
 // Helper class for adding and requesting calendar data from Firestore
@@ -29,7 +29,7 @@ class Calendar {
    * @returns {Promise<ScheduleItem[]>} - An array of objects from the Firestore collection
    */
   getCalendar(): Promise<ScheduleItem[]> {
-    return requestData(`schedules/${this.userId}/assignments`) as Promise<
+    return requestData(`users/${this.userId}/schedule`) as Promise<
       ScheduleItem[]
     >;
   }
@@ -41,7 +41,7 @@ class Calendar {
    */
   async addAssignment(data: APIScheduleItem): Promise<string> {
     data = this.sanitiseData(data);
-    const ref = await addData(`schedules/${this.userId}/assignments`, data);
+    const ref = await addData(`users/${this.userId}/schedule`, data);
     if (!ref) {
       throw new Error("Failed to add data");
     }

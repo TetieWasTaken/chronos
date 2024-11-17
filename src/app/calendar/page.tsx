@@ -15,7 +15,8 @@ import { User } from "firebase/auth";
 import { COLOURS, SCHEDULE_TYPES } from "@/constants";
 
 // Firebase
-import { Calendar } from "@/utils/firebase/calendar";
+import { Calendar } from "@/utils/calendar";
+import { Preferences } from "@/utils/preferences";
 
 const auth = new FirebaseAuth();
 
@@ -42,6 +43,7 @@ export default function CalendarPage() {
 
   const [user, setUser] = useState<User | null>(null);
   const [calendar, setCalendar] = useState<Calendar | null>(null);
+  const [preferences, setPreferences] = useState<Preferences | null>(null);
   const [loading, setLoading] = useState(true);
   const [authorising, setAuthorising] = useState(true);
   const memoisedAuthorising = useMemo(() => authorising, [authorising]);
@@ -63,6 +65,7 @@ export default function CalendarPage() {
       setUser(user);
       if (user) {
         setCalendar(new Calendar(user.uid));
+        setPreferences(new Preferences(user.uid));
       } else {
         router.push("/auth");
       }
@@ -510,6 +513,8 @@ export default function CalendarPage() {
                               );
                             };
 
+                            const colour = COLOURS[item.type] || "bg-gray-200";
+
                             return (
                               <div
                                 key={itemIndex}
@@ -528,8 +533,6 @@ export default function CalendarPage() {
                                   isShortDuration
                                     ? "flex items-center justify-center"
                                     : "flex items-start"
-                                } ${
-                                  COLOURS[item.type] || "bg-gray-600"
                                 } text-white transition-all duration-200 ${
                                   isHovered ? "z-50" : ""
                                 } ${isShortDuration ? "h-[40px]" : ""} ${
@@ -547,6 +550,7 @@ export default function CalendarPage() {
                                       (isPast && !isHovered)
                                       ? 0.5
                                       : 1,
+                                  background: colour,
                                 }}
                               >
                                 {isActive() && (

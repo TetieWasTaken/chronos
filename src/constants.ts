@@ -1,7 +1,7 @@
-import type { scheduleTypesType } from "./types";
+import type { ScheduleTypesType } from "./types";
 import colours from "tailwindcss/colors";
 
-export const COLOURS: Record<scheduleTypesType, string> = {
+export const COLOURS: Record<ScheduleTypesType, string> = {
   test: colours.orange[600],
   assignment: colours.blue[600],
   lecture: colours.fuchsia[600],

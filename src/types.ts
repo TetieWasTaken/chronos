@@ -1,10 +1,10 @@
 import { SCHEDULE_TYPES } from "./constants";
 
-export type scheduleTypesType = typeof SCHEDULE_TYPES[number];
+export type ScheduleTypesType = typeof SCHEDULE_TYPES[number];
 
 export type APIScheduleItem = {
   title: string;
-  type: scheduleTypesType;
+  type: ScheduleTypesType;
   timestamp: number;
   endTimestamp?: number;
   description?: string;
@@ -12,4 +12,8 @@ export type APIScheduleItem = {
 
 export type ScheduleItem = APIScheduleItem & {
   id: string;
+};
+
+export type PreferencesType = {
+  theme: Record<ScheduleTypesType, string>;
 };
