@@ -1,6 +1,10 @@
+import { SCHEDULE_TYPES } from "./constants";
+
+export type scheduleTypesType = typeof SCHEDULE_TYPES[number];
+
 export type APIScheduleItem = {
   title: string;
-  type: "deadline" | "meeting" | "study" | "event";
+  type: scheduleTypesType;
   timestamp: number;
   endTimestamp?: number;
   description?: string;

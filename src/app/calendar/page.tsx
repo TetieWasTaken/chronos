@@ -12,19 +12,17 @@ import type { APIScheduleItem, ScheduleItem } from "@/types";
 import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import { FirebaseAuth } from "@/utils/firebase/auth";
 import { User } from "firebase/auth";
+import { COLOURS, SCHEDULE_TYPES } from "@/constants";
 
 // Firebase
 import { Calendar } from "@/utils/firebase/calendar";
 
 const auth = new FirebaseAuth();
 
-// The different types that a schedule item can have
-const scheduleTypes = [
-  { value: "deadline", label: "Deadline" },
-  { value: "meeting", label: "Meeting" },
-  { value: "study", label: "Study" },
-  { value: "event", label: "Event" },
-];
+const scheduleTypes = SCHEDULE_TYPES.map((type) => ({
+  value: type,
+  label: type.charAt(0).toUpperCase() + type.slice(1),
+}));
 
 // Page
 export default function CalendarPage() {
@@ -305,11 +303,7 @@ export default function CalendarPage() {
               onChange={(option) =>
                 setNewItem({
                   ...newItem,
-                  type: (option?.value as
-                    | "deadline"
-                    | "meeting"
-                    | "study"
-                    | "event") || "deadline",
+                  type: option?.value || "deadline",
                 })}
               options={scheduleTypes}
               className="mb-3"
@@ -535,13 +529,7 @@ export default function CalendarPage() {
                                     ? "flex items-center justify-center"
                                     : "flex items-start"
                                 } ${
-                                  item.type === "deadline"
-                                    ? "bg-red-500"
-                                    : item.type === "meeting"
-                                    ? "bg-blue-500"
-                                    : item.type === "study"
-                                    ? "bg-green-500"
-                                    : "bg-purple-500"
+                                  COLOURS[item.type] || "bg-gray-600"
                                 } text-white transition-all duration-200 ${
                                   isHovered ? "z-50" : ""
                                 } ${isShortDuration ? "h-[40px]" : ""} ${
